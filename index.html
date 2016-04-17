@@ -169,8 +169,8 @@
 				}));
 	}
 
-	function random_digit() {
-		return Math.floor(Math.random() * 10);
+	function random_number(limit) {
+		return Math.floor(Math.random() * limit);
 	}
 
 	function graph_number(input) {
@@ -221,12 +221,7 @@
 	}
 
 	function new_question() {
-		var d1 = random_digit();
-		var d2 = random_digit();
-		var d3 = random_digit();
-		var d4 = random_digit();
-
-		var x = ((d1 * 1000) + (d2 * 100) + (d3 * 10) + d4);
+		var x = random_number(10*1000);
 
 		graph_number(x);
 
