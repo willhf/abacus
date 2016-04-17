@@ -24,9 +24,7 @@
 	var BOTTOM_LINE_HEIGHT = ROWS[4];
 
 	var LINE_STROKE_WIDTH = 3;
-
 	var CIRCLE_RADIUS = 23;
-
 	var COLUMN_SIZE = ROW_HEIGHT * 2 - 10;
 	var COLUMN_BASE = 100;
 
@@ -39,8 +37,8 @@
 	];
 
 	var CIRCLE_BORDER_WIDTH = 3;
-	var FILL_COLOR_UPPER = "black";  // 5-9
-	var FILL_COLOR_LOWER = "white";  // 0-4
+	var FILL_COLOR_UPPER = "black";  // digits 5-9
+	var FILL_COLOR_LOWER = "white";  // digits 0-4
 	var BORDER_COLOR_FOCUS = "red";
 
 	function digit_to_fill_color(digit) {
@@ -106,9 +104,7 @@
 	function digit_from_number(num, place) {
 		var x = Math.floor(num / place);
 
-		x = x % 10;
-
-		return x;
+		return x % 10;
 	}
 
 	function add_circle(svgContainer, place, digit) {
