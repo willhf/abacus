@@ -20,6 +20,14 @@
 		ROW_BASE + (ROW_HEIGHT * 4),
 	];
 
+	var ROW_CENTERS = [
+		ROW_BASE + (ROW_HEIGHT * 0) + (ROW_HEIGHT / 2),
+		ROW_BASE + (ROW_HEIGHT * 1) + (ROW_HEIGHT / 2),
+		ROW_BASE + (ROW_HEIGHT * 2) + (ROW_HEIGHT / 2),
+		ROW_BASE + (ROW_HEIGHT * 3) + (ROW_HEIGHT / 2),
+		ROW_BASE + (ROW_HEIGHT * 4) + (ROW_HEIGHT / 2),
+	];
+
 	var TOP_LINE_HEIGHT = ROWS[1];
 	var BOTTOM_LINE_HEIGHT = ROWS[4];
 
@@ -77,27 +85,22 @@
 		}
 	}
 
+	// Finds the index of the entry of ROW_CENTERS which is closest to y.
 	function closest_row_to_cursor_y_position(y) {
-		// TODO(willhf) make this smarter
-		var d0 =  Math.abs(ROWS[0] - y);
-		var d1 =  Math.abs(ROWS[1] - y);
-		var d2 =  Math.abs(ROWS[2] - y);
-		var d3 =  Math.abs(ROWS[3] - y);
-		var d4 =  Math.abs(ROWS[4] - y);
-		var dmin = Math.min(d0, d1, d2, d3, d4);
+		var closest_row_idx = 0;
+		var min_distance = 0;
+		var len = ROW_CENTERS.length;
 
-		switch (dmin) {
-		case d0:
-			return 0;
-		case d1:
-			return 1;
-		case d2:
-			return 2;
-		case d3:
-			return 3;
-		case d4:
-			return 4;
-    	}
+		for (var i = 0; i < len; i++) {
+			var distance = Math.abs(ROW_CENTERS[i] - y);
+
+			if ((0 == i) || (distance < min_distance)) {
+				closest_row_idx = i;
+				min_distance = distance;
+			}
+		}
+
+		return closest_row_idx;
 	}
 
 	function digit_from_number(num, place) {
@@ -105,15 +108,6 @@
 
 		return x % 10;
 	}
-
-	// TODO: Limit vertical motion to within abacus area.
-	// TODO: Account for where inside the square was clicked.
-	function dragmove() {
-		d3.select(this)
-		// .attr('x', d3.event.x)
-		.attr('y', d3.event.y);
-	}
-
 
 	function add_square(svgContainer, place, digit) {
 		var fill = digit_to_fill_color(digit);
@@ -165,7 +159,13 @@
 					d3.select("svg").remove();
 					graph_number(num);
 				})
-				.on("drag", dragmove)
+				.on("drag", function() {
+					// TODO: Limit vertical motion to within abacus area.
+					// TODO: Account for where inside the square was clicked (
+					// the (ROW_HEIGHT / 2) drags from the center).
+					d3.select(this)
+					.attr('y', d3.event.y - (ROW_HEIGHT / 2));
+				})
 			);
 	}
 
