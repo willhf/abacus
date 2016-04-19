@@ -220,43 +220,43 @@ function new_question() {
 	window.answer = x;
 }
 
-// function my_handler() {
-// 	var val = document.getElementById("answer").value;
-// 	var reg = new RegExp('^[0-9]*$');
+function identification_game() {
+	var val = document.getElementById("answer").value;
+	var reg = new RegExp('^[0-9]*$');
 
-// 	if (reg.test(val)) {
-// 		/*
-// 		 * They are typing out the number, proceed.
-// 		 */
-// 		return;
-// 	}
-// 	var x = parseInt(val);
+	if (reg.test(val)) {
+		/*
+		 * They are typing out the number, proceed.
+		 */
+		return;
+	}
+	var x = parseInt(val);
 
-// 	if (true) {
-// 		/*
-// 		 * TEST MODE
-// 		 */
-// 		if (x == window.answer) {
-// 			document.getElementById("answer").value = "";
-// 			d3.select("svg").remove();
-// 			new_question();
-// 		} else {
-// 			alert("incorrect!");
-// 			document.getElementById("answer").value = "";
-// 		}
-// 	} else {
-// 		/*
-// 		 * ADD MODE
-// 		 */
-// 		d3.select("svg").remove();
-// 		if (0 == x) {
-// 			graph_number(x);
-// 		} else {
-// 			graph_number(window.last_graphed + x);
-// 		}
-// 		document.getElementById("answer").value = "";
-// 	}
-// }
+	if (true) {
+		/*
+		 * TEST MODE
+		 */
+		if (x == window.answer) {
+			document.getElementById("answer").value = "";
+			d3.select("svg").remove();
+			new_question();
+		} else {
+			alert("incorrect!");
+			document.getElementById("answer").value = "";
+		}
+	} else {
+		/*
+		 * ADD MODE
+		 */
+		d3.select("svg").remove();
+		if (0 == x) {
+			graph_number(x);
+		} else {
+			graph_number(window.last_graphed + x);
+		}
+		document.getElementById("answer").value = "";
+	}
+}
 
 function adding_game() {
 	window.place_with_focus = 1;
