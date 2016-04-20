@@ -12,14 +12,6 @@ var ROWS = [
 	ROW_BASE + (ROW_HEIGHT * 4),
 ];
 
-var ROW_CENTERS = [
-	ROW_BASE + (ROW_HEIGHT * 0) + (ROW_HEIGHT / 2),
-	ROW_BASE + (ROW_HEIGHT * 1) + (ROW_HEIGHT / 2),
-	ROW_BASE + (ROW_HEIGHT * 2) + (ROW_HEIGHT / 2),
-	ROW_BASE + (ROW_HEIGHT * 3) + (ROW_HEIGHT / 2),
-	ROW_BASE + (ROW_HEIGHT * 4) + (ROW_HEIGHT / 2),
-];
-
 var TOP_LINE_HEIGHT = ROWS[1];
 var BOTTOM_LINE_HEIGHT = ROWS[4];
 
@@ -64,9 +56,10 @@ function place_to_column(place) {
 	}
 }
 
-// Finds the index of the entry of ROW_CENTERS which is closest to y.
+// Finds the index of the row which is closest to y.
 function closest_row_to_cursor_y_position(y) {
-	var offset = y - ROW_BASE - (ROW_HEIGHT / 2);
+	var offset = y - ROW_BASE -
+		(ROW_HEIGHT / 2); // since we are dragging to the center of each row
 	var rounded = Math.round(offset / ROW_HEIGHT);
 
 	return Math.max(0, Math.min(4, rounded));
