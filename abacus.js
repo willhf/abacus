@@ -40,14 +40,6 @@ var FILL_COLOR_5_THRU_9 = "black";
 var FILL_COLOR_0_THRU_4 = "white";
 var BORDER_COLOR_FOCUS = "red";
 
-function digit_to_fill_color(digit) {
-	if (digit > 4) {
-		return FILL_COLOR_5_THRU_9;
-	} else {
-		return FILL_COLOR_0_THRU_4;
-	}
-}
-
 function digit_to_row(digit) {
 	// the top row is row 0
 	if (digit < 5) {
@@ -104,32 +96,35 @@ function digit_from_number(num, place) {
 	return x % 10;
 }
 
-function add_square(svgContainer, place, digit, num) {
-	var fill = digit_to_fill_color(digit);
-	var row = digit_to_row(digit);
-	var column = place_to_column(place);
+function Digit(num, place) {
+	this.num = num;
+	this.place = place;
+	this.val = digit_from_number(this.num,  this.place);
 
+	if (this.val > 4) {
+		this.fill_color = FILL_COLOR_5_THRU_9;
+	} else {
+		this.fill_color = FILL_COLOR_0_THRU_4;
+	}
+
+	this.row    = digit_to_row(this.val);
+	this.column = place_to_column(this.place);
+}
+
+
+function add_square(svgContainer, dgt) {
 	var border_color = "black";
 
-	if (place == window.place_with_focus) {
+	if (dgt.place == window.place_with_focus) {
 		border_color = BORDER_COLOR_FOCUS;
 	}
 
-	var square = {
-		row:   row,
-		drag: function(y) {
-			var r = closest_row_to_cursor_y_position(y);
-
-			return ROWS[r];
-		}
-	};
-
 	svgContainer.append("rect")
-		.attr("x", COLUMNS[column])
-		.attr("y", ROWS[row])
+		.attr("x", COLUMNS[dgt.column])
+		.attr("y", ROWS[dgt.row])
 		.attr("width", ROW_HEIGHT)
 		.attr("height", ROW_HEIGHT)
-		.attr("fill", fill)
+		.attr("fill", dgt.fill_color)
 		.attr("stroke", border_color)
 		.attr("stroke-width", SQUARE_BORDER_WIDTH)
 
@@ -141,26 +136,28 @@ function add_square(svgContainer, place, digit, num) {
 
 				var ending_row = closest_row_to_cursor_y_position(y);
 
-				if (square.row == ending_row) {
+				if (dgt.row == ending_row) {
 					// 'click'
-					if (digit >= 5) {
-						num -= 5 * place;
+					if (dgt.val >= 5) {
+						dgt.num -= 5 * dgt.place;
 					} else {
-						num += 5 * place;
+						dgt.num += 5 * dgt.place;
 					}
 				} else {
 					// actual drag
-					var diff = ending_row - square.row;
+					var diff = ending_row - dgt.row;
 
-					num -= place * diff;
+					dgt.num -= dgt.place * diff;
 				}
 
 				d3.select("svg").remove();
-				graph_number(num);
+				graph_number(dgt.num);
 			})
 			.on("drag", function() {
+				var r = closest_row_to_cursor_y_position(d3.event.y);
+
 				d3.select(this)
-				.attr('y', square.drag(d3.event.y));
+				.attr('y', ROWS[r]);
 			})
 		);
 }
@@ -210,10 +207,10 @@ function graph_number(input) {
 		window.place_with_focus = 1;
 	}
 
-	add_square(svgContainer, 1000, digit_from_number(input, 1000), input);
-	add_square(svgContainer,  100, digit_from_number(input,  100), input);
-	add_square(svgContainer,   10, digit_from_number(input,   10), input);
-	add_square(svgContainer,    1, digit_from_number(input,    1), input);
+	add_square(svgContainer, new Digit(input, 1000));
+	add_square(svgContainer, new Digit(input,  100));
+	add_square(svgContainer, new Digit(input,   10));
+	add_square(svgContainer, new Digit(input,    1));
 }
 
 function new_question() {
