@@ -70,24 +70,11 @@ function place_to_column(place) {
 }
 
 // Finds the index of the entry of ROW_CENTERS which is closest to y.
-//
-// TODO: Use math to increase the performance of this.
-//
 function closest_row_to_cursor_y_position(y) {
-	var closest_row_idx = 0;
-	var min_distance = 0;
-	var len = ROW_CENTERS.length;
+	var offset = y - ROW_BASE - (ROW_HEIGHT / 2);
+	var rounded = Math.round(offset / ROW_HEIGHT);
 
-	for (var i = 0; i < len; i++) {
-		var distance = Math.abs(ROW_CENTERS[i] - y);
-
-		if ((0 == i) || (distance < min_distance)) {
-			closest_row_idx = i;
-			min_distance = distance;
-		}
-	}
-
-	return closest_row_idx;
+	return Math.max(0, Math.min(4, rounded));
 }
 
 function digit_from_number(num, place) {
@@ -110,7 +97,6 @@ function Digit(num, place) {
 	this.row    = digit_to_row(this.val);
 	this.column = place_to_column(this.place);
 }
-
 
 function add_square(svgContainer, dgt) {
 	var border_color = "black";
