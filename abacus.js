@@ -49,11 +49,6 @@ function digit_to_row(digit) {
 	}
 }
 
-// always returns 0-4
-function row_to_digit(row) {
-	return 4 - row;
-}
-
 function place_to_column(place) {
 	if (1000 == place) {
 		return 0;
@@ -208,39 +203,21 @@ function new_question() {
 }
 
 function identification_game() {
-	var val = document.getElementById("answer").value;
+	var guess_string = document.getElementById("answer").value;
 	var reg = new RegExp('^[0-9]*$');
 
-	if (reg.test(val)) {
-		/*
-		 * They are typing out the number, proceed.
-		 */
+	if (reg.test(guess_string)) {
+		/* They are typing out the number, proceed. */
 		return;
 	}
-	var x = parseInt(val);
+	var guess_int = parseInt(guess_string);
 
-	if (true) {
-		/*
-		 * TEST MODE
-		 */
-		if (x == window.answer) {
-			document.getElementById("answer").value = "";
-			d3.select("svg").remove();
-			new_question();
-		} else {
-			alert("incorrect!");
-			document.getElementById("answer").value = "";
-		}
-	} else {
-		/*
-		 * ADD MODE
-		 */
+	if (guess_int == window.answer) {
+		document.getElementById("answer").value = "";
 		d3.select("svg").remove();
-		if (0 == x) {
-			graph_number(x);
-		} else {
-			graph_number(window.last_graphed + x);
-		}
+		new_question();
+	} else {
+		alert("incorrect!");
 		document.getElementById("answer").value = "";
 	}
 }
