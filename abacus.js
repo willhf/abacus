@@ -101,7 +101,7 @@ function digit_from_number(num, place) {
 	return x % 10;
 }
 
-function add_square(svgContainer, place, digit) {
+function add_square(svgContainer, place, digit, num) {
 	var fill = digit_to_fill_color(digit);
 	var row = digit_to_row(digit);
 	var column = place_to_column(place);
@@ -116,7 +116,7 @@ function add_square(svgContainer, place, digit) {
 		digit: digit,
 		place: place,
 		row:   row,
-		motion: function(y) {
+		drag: function(y) {
 			var r = closest_row_to_cursor_y_position(y);
 
 			return ROWS[r];
@@ -142,8 +142,6 @@ function add_square(svgContainer, place, digit) {
 
 				var ending_row = closest_row_to_cursor_y_position(y);
 
-				var num = window.last_graphed;
-
 				if (square.row == ending_row) {
 					// 'click'
 					if (digit >= 5) {
@@ -163,7 +161,7 @@ function add_square(svgContainer, place, digit) {
 			})
 			.on("drag", function() {
 				d3.select(this)
-				.attr('y', square.motion(d3.event.y));
+				.attr('y', square.drag(d3.event.y));
 			})
 		);
 }
@@ -213,10 +211,10 @@ function graph_number(input) {
 		window.place_with_focus = 1;
 	}
 
-	add_square(svgContainer, 1000, digit_from_number(input, 1000));
-	add_square(svgContainer,  100, digit_from_number(input,  100));
-	add_square(svgContainer,   10, digit_from_number(input,   10));
-	add_square(svgContainer,    1, digit_from_number(input,    1));
+	add_square(svgContainer, 1000, digit_from_number(input, 1000), input);
+	add_square(svgContainer,  100, digit_from_number(input,  100), input);
+	add_square(svgContainer,   10, digit_from_number(input,   10), input);
+	add_square(svgContainer,    1, digit_from_number(input,    1), input);
 }
 
 function new_question() {
