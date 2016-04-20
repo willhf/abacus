@@ -78,6 +78,9 @@ function place_to_column(place) {
 }
 
 // Finds the index of the entry of ROW_CENTERS which is closest to y.
+//
+// TODO: Use math to increase the performance of this.
+//
 function closest_row_to_cursor_y_position(y) {
 	var closest_row_idx = 0;
 	var min_distance = 0;
@@ -113,8 +116,6 @@ function add_square(svgContainer, place, digit, num) {
 	}
 
 	var square = {
-		digit: digit,
-		place: place,
 		row:   row,
 		drag: function(y) {
 			var r = closest_row_to_cursor_y_position(y);
@@ -134,9 +135,7 @@ function add_square(svgContainer, place, digit, num) {
 
 		.call(d3.behavior.drag()
 			.on("dragend", function () {
-				var coordinates = [0, 0];
-	
-				coordinates = d3.mouse(this);
+				var coordinates = d3.mouse(this);
 				var x = coordinates[0];
 				var y = coordinates[1];
 
