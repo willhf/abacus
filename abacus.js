@@ -76,11 +76,13 @@ function Digit(num, place) {
 	this.place = place;
 	this.val = digit_from_number(this.num,  this.place);
 
-	if (this.val > 4) {
-		this.fill_color = FILL_COLOR_5_THRU_9;
-	} else {
-		this.fill_color = FILL_COLOR_0_THRU_4;
-	}
+	this.fill_color = function () {
+		if (this.val > 4) {
+			return FILL_COLOR_5_THRU_9;
+		} else {
+			return FILL_COLOR_0_THRU_4;
+		}
+	};
 
 	this.row    = digit_to_row(this.val);
 	this.column = place_to_column(this.place);
@@ -98,7 +100,7 @@ function add_square(svgContainer, dgt) {
 		.attr("y", ROWS[dgt.row])
 		.attr("width", ROW_HEIGHT)
 		.attr("height", ROW_HEIGHT)
-		.attr("fill", dgt.fill_color)
+		.attr("fill", dgt.fill_color())
 		.attr("stroke", border_color)
 		.attr("stroke-width", SQUARE_BORDER_WIDTH)
 
