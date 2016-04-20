@@ -112,6 +112,17 @@ function add_square(svgContainer, place, digit) {
 		border_color = BORDER_COLOR_FOCUS;
 	}
 
+	var square = {
+		digit: digit,
+		place: place,
+		row:   row,
+		motion: function(y) {
+			var r = closest_row_to_cursor_y_position(y);
+
+			return ROWS[r];
+		}
+	};
+
 	svgContainer.append("rect")
 		.attr("x", COLUMNS[column])
 		.attr("y", ROWS[row])
@@ -129,12 +140,11 @@ function add_square(svgContainer, place, digit) {
 				var x = coordinates[0];
 				var y = coordinates[1];
 
-				var starting_row = digit_to_row(digit);
 				var ending_row = closest_row_to_cursor_y_position(y);
 
 				var num = window.last_graphed;
 
-				if (starting_row == ending_row) {
+				if (square.row == ending_row) {
 					// 'click'
 					if (digit >= 5) {
 						num -= 5 * place;
@@ -143,7 +153,7 @@ function add_square(svgContainer, place, digit) {
 					}
 				} else {
 					// actual drag
-					var diff = ending_row - starting_row;
+					var diff = ending_row - square.row;
 
 					num -= place * diff;
 				}
@@ -152,11 +162,8 @@ function add_square(svgContainer, place, digit) {
 				graph_number(num);
 			})
 			.on("drag", function() {
-				// TODO: Limit vertical motion to within abacus area.
-				// TODO: Account for where inside the square was clicked (
-				// the (ROW_HEIGHT / 2) drags from the center).
 				d3.select(this)
-				.attr('y', d3.event.y - (ROW_HEIGHT / 2));
+				.attr('y', square.motion(d3.event.y));
 			})
 		);
 }
