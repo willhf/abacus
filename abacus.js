@@ -27,34 +27,12 @@ var COLUMNS = [
 	COLUMN_BASE + (COLUMN_SIZE * 4),
 ];
 
+var NUM_COLUMNS = 4;
+
 var SQUARE_BORDER_WIDTH = 3;
 var FILL_COLOR_5_THRU_9 = "black";
 var FILL_COLOR_0_THRU_4 = "white";
 var BORDER_COLOR_FOCUS = "red";
-
-function digit_to_row(digit) {
-	// the top row is row 0
-	if (digit < 5) {
-		return 4 - digit;
-	} else {
-		return 9 - digit;
-	}
-}
-
-function place_to_column(place) {
-	if (1000 == place) {
-		return 0;
-	}
-	if (100 == place) {
-		return 1;
-	}
-	if (10 == place) {
-		return 2;
-	}
-	if (1 == place) {
-		return 3;
-	}
-}
 
 // Finds the index of the row which is closest to y.
 function closest_row_to_cursor_y_position(y) {
@@ -65,16 +43,13 @@ function closest_row_to_cursor_y_position(y) {
 	return Math.max(0, Math.min(4, rounded));
 }
 
-function digit_from_number(num, place) {
-	var x = Math.floor(num / place);
-
-	return x % 10;
-}
-
-function Digit(num, place) {
-	this.num = num;
+function Digit(val, place) {
+	this.val = val;
 	this.place = place;
-	this.val = digit_from_number(this.num,  this.place);
+
+	this.number = function () {
+		return this.val * this.place;
+	}
 
 	this.fill_color = function () {
 		if (this.val > 4) {
@@ -84,69 +59,102 @@ function Digit(num, place) {
 		}
 	};
 
-	this.row    = digit_to_row(this.val);
-	this.column = place_to_column(this.place);
-}
-
-function add_square(svgContainer, dgt) {
-	var border_color = "black";
-
-	if (dgt.place == window.place_with_focus) {
-		border_color = BORDER_COLOR_FOCUS;
+	this.row = function () {
+		if (this.val < 5) {
+			return 4 - this.val;
+		} else {
+			return 9 - this.val;
+		}
 	}
 
-	svgContainer.append("rect")
-		.attr("x", COLUMNS[dgt.column])
-		.attr("y", ROWS[dgt.row])
-		.attr("width", ROW_HEIGHT)
-		.attr("height", ROW_HEIGHT)
-		.attr("fill", dgt.fill_color())
-		.attr("stroke", border_color)
-		.attr("stroke-width", SQUARE_BORDER_WIDTH)
+	this.flip = function () {
+		if (this.val >= 5) {
+			this.val -= 5;
+		} else {
+			this.val += 5;
+		}
+	}
 
-		.call(d3.behavior.drag()
-			.on("dragend", function () {
-				var coordinates = d3.mouse(this);
-				var x = coordinates[0];
-				var y = coordinates[1];
+	this.move_to_row = function (r) {
+		var diff = r - this.row();
 
-				var ending_row = closest_row_to_cursor_y_position(y);
+		if (0 == diff) {
+			this.flip();
+			return;
+		}
 
-				if (dgt.row == ending_row) {
-					// 'click'
-					if (dgt.val >= 5) {
-						dgt.num -= 5 * dgt.place;
-					} else {
-						dgt.num += 5 * dgt.place;
-					}
-				} else {
-					// actual drag
-					var diff = ending_row - dgt.row;
+		this.val -= diff;
+	}
+}
 
-					dgt.num -= dgt.place * diff;
-				}
+function Abacus(num_columns, n) {
+	this.num_columns = num_columns;
+	this.digits = [];
 
-				d3.select("svg").remove();
-				graph_number(dgt.num);
-			})
-			.on("drag", function() {
-				var r = closest_row_to_cursor_y_position(d3.event.y);
+	this.set_number = function(num) {
+		var place = 1;
 
-				d3.select(this)
-				.attr('y', ROWS[r]);
-			})
-		);
+		for (var i = 0; i < this.num_columns; i++) {
+			var d = Math.floor(num / place) % 10;
+
+			this.digits[i] = new Digit(d, place);
+			place *= 10;
+		}
+	};
+
+	this.set_number(n);
+
+	this.get_number = function() {
+		var n = 0;
+
+		for (var i = 0; i < this.num_columns; i++) {
+			n += this.digits[i].number();
+		}
+		return n;
+	}
 }
 
 function random_number(limit) {
 	return Math.floor(Math.random() * limit);
 }
 
-function graph_number(input) {
+function draw_digit(svgContainer, column, dgt, on_update_callback) {
+	var border_color = "black";
 
-	if (input > 9999) {
-		input = 0;
-	}
+	// TODO: Distinguish click vs drag.
+
+	svgContainer.append("rect")
+		.attr("x", COLUMNS[column])
+		.attr("y", ROWS[dgt.row()])
+		.attr("width", ROW_HEIGHT)
+		.attr("height", ROW_HEIGHT)
+		.attr("fill", dgt.fill_color())
+		.attr("stroke", border_color)
+		.attr("stroke-width", SQUARE_BORDER_WIDTH)
+		.call(d3.behavior.drag()
+			.on("dragend", function () {
+				var coordinates = d3.mouse(this);
+				var y = coordinates[1];
+				var r = closest_row_to_cursor_y_position(y);
+
+				dgt.move_to_row(r);
+				d3.select(this)
+					.attr("fill", dgt.fill_color())
+					.attr('y', ROWS[dgt.row()]);
+
+				on_update_callback();
+			})
+			.on("drag", function() {
+				var r = closest_row_to_cursor_y_position(d3.event.y);
+
+				d3.select(this)
+					.attr('y', ROWS[r]);
+			})
+		);
+}
+
+function graph_abacus(abacus, on_update_callback) {
+
 	var svgContainer = window.d3.select("body")
 		.append("svg")
 		.attr("width", TOTAL_WIDTH)
@@ -168,102 +176,10 @@ function graph_number(input) {
 		.attr("stroke-width", LINE_STROKE_WIDTH)
 		.attr("stroke", "black");
 
-	window.last_graphed = input;
+	for (var i = 0; i < abacus.num_columns; i++) {
+		var column = NUM_COLUMNS - i - 1;
+		var dgt = abacus.digits[i];
 
-	if (input == window.add_answer) {
-		var next_add = Math.floor(Math.random() * 9) + 1;
-
-		while (next_add == window.number_to_add) {
-			next_add = Math.floor(Math.random() * 9) + 1;
-		}
-
-		window.number_to_add = next_add;
-		document.getElementById('question').innerHTML = window.number_to_add;
-		window.add_answer = input + window.number_to_add;
-		window.place_with_focus = 1;
+		draw_digit(svgContainer, column, dgt, on_update_callback);
 	}
-
-	add_square(svgContainer, new Digit(input, 1000));
-	add_square(svgContainer, new Digit(input,  100));
-	add_square(svgContainer, new Digit(input,   10));
-	add_square(svgContainer, new Digit(input,    1));
-}
-
-function new_question() {
-	var x = random_number(10*1000);
-
-	graph_number(x);
-
-	window.answer = x;
-}
-
-function identification_game() {
-	var guess_string = document.getElementById("answer").value;
-	var reg = new RegExp('^[0-9]*$');
-
-	if (reg.test(guess_string)) {
-		/* They are typing out the number, proceed. */
-		return;
-	}
-	var guess_int = parseInt(guess_string);
-
-	if (guess_int == window.answer) {
-		document.getElementById("answer").value = "";
-		d3.select("svg").remove();
-		new_question();
-	} else {
-		alert("incorrect!");
-		document.getElementById("answer").value = "";
-	}
-}
-
-function adding_game() {
-	window.place_with_focus = 1;
-
-	new_question();
-
-	window.number_to_add = Math.floor(Math.random() * 9) + 1;
-	document.getElementById('question').innerHTML = window.number_to_add;
-
-	window.add_answer = window.answer + window.number_to_add;
-
-	window.addEventListener('keypress', function (e) {
-
-		var d = digit_from_number(window.last_graphed, window.place_with_focus);
-
-		switch (e.keyCode) {
-			case 110: // (j) n
-				window.place_with_focus *= 10;
-				break;
-			case 117: // (i) u
-				if ((d == 4) || (d == 9)) {
-					window.last_graphed -= window.place_with_focus * 4;
-				} else {
-					window.last_graphed += window.place_with_focus * 1;
-				}
-				break;
-			case 101: // (k) e
-				if ((d == 0) || (d == 5)) {
-					window.last_graphed += window.place_with_focus * 4;
-				} else {
-					window.last_graphed -= window.place_with_focus * 1;
-				}
-				break;
-			case 105: // (l) i
-				window.place_with_focus /= 10;
-				break;
-			case 32: // (space)
-				if (d > 4) {
-					window.last_graphed -= window.place_with_focus * 5;
-				} else {
-					window.last_graphed += window.place_with_focus * 5;
-				}
-
-				break;
-		}
-
-		d3.select("svg").remove();
-		graph_number(window.last_graphed);
-
-	}, false);
 }

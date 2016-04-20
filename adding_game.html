@@ -7,7 +7,32 @@
 	<script src="abacus.js" charset="utf-8"></script>
 	<script type="text/javascript">
 
-	adding_game();
+	function random_digit() {
+		return Math.floor(Math.random() * 9) + 1;
+	}
+
+	var start = random_number(1000);
+	var ab = new Abacus(4, start);
+
+	var next_add = random_digit();
+	document.getElementById('question').innerHTML = next_add;
+	var answer = start + next_add;
+
+	graph_abacus(ab, function() {
+		val = ab.get_number();
+
+		if (val != answer) {
+			return;
+		}
+
+		var prev_next_add = next_add;
+		next_add = random_digit();
+		while (next_add == prev_next_add) {
+			next_add = random_digit();
+		}
+		answer = val + next_add;
+		document.getElementById('question').innerHTML = next_add;
+	});
 
 	</script>
 

@@ -9,7 +9,34 @@
 		<input id="answer" autofocus type="text" oninput="identification_game();"/ >
 	</form>
 	<script type="text/javascript">
-	new_question();
+
+	var answer = random_number(10*1000);
+	var ab = new Abacus(4, answer);
+	graph_abacus(ab, function(){});
+
+	function identification_game() {
+		var guess_string = document.getElementById("answer").value;
+		var reg = new RegExp('^[0-9]*$');
+
+		if (reg.test(guess_string)) {
+			// the number is not finished yet
+			return;
+		}
+		var guess_int = parseInt(guess_string);
+
+		document.getElementById("answer").value = "";
+
+		if (guess_int != answer) {
+			alert("incorrect!");
+			return;
+		}
+
+		answer = random_number(10*1000);
+		ab.set_number(answer);
+		d3.select("svg").remove();
+		graph_abacus(ab, function(){});
+	}
+
 	</script>
 	</body>
 </html>
