@@ -19,6 +19,7 @@ var LINE_STROKE_WIDTH = 3;
 var COLUMN_SIZE = ROW_HEIGHT * 2 - 10;
 var COLUMN_BASE = 100;
 
+// rects are centered on each column
 var COLUMNS = [
 	COLUMN_BASE + (COLUMN_SIZE * 0),
 	COLUMN_BASE + (COLUMN_SIZE * 1),
@@ -42,6 +43,15 @@ function closest_row_to_cursor_y_position(y) {
 
 	return Math.max(0, Math.min(4, rounded));
 }
+
+function closest_column_to_cursor_x_position(x) {
+	var offset = x - COLUMN_BASE;
+	var rounded = Math.round(offset / COLUMN_SIZE);
+	var c = Math.max(0, Math.min(COLUMNS.length - 1, rounded));
+
+	return NUM_COLUMNS - c - 1;
+}
+
 
 function Digit(val, place) {
 	this.val = val;
@@ -118,39 +128,22 @@ function random_number(limit) {
 	return Math.floor(Math.random() * limit);
 }
 
-function draw_digit(svgContainer, column, dgt, on_update_callback) {
-	var border_color = "black";
+function move_digit(abacus, coords) {
+	var x = coords[0];
+	var y = coords[1];
+	var column = closest_column_to_cursor_x_position(x);
+	var r = closest_row_to_cursor_y_position(y);
+	var digit = abacus.digits[column];
+	var rect = abacus.digit_rects[column];
+	var previous_row = digit.row();
 
-	// TODO: Distinguish click vs drag.
-
-	svgContainer.append("rect")
-		.attr("x", COLUMNS[column])
-		.attr("y", ROWS[dgt.row()])
-		.attr("width", ROW_HEIGHT)
-		.attr("height", ROW_HEIGHT)
-		.attr("fill", dgt.fill_color())
-		.attr("stroke", border_color)
-		.attr("stroke-width", SQUARE_BORDER_WIDTH)
-		.call(d3.behavior.drag()
-			.on("dragend", function () {
-				var coordinates = d3.mouse(this);
-				var y = coordinates[1];
-				var r = closest_row_to_cursor_y_position(y);
-
-				dgt.move_to_row(r);
-				d3.select(this)
-					.attr("fill", dgt.fill_color())
-					.attr('y', ROWS[dgt.row()]);
-
-				on_update_callback();
-			})
-			.on("drag", function() {
-				var r = closest_row_to_cursor_y_position(d3.event.y);
-
-				d3.select(this)
-					.attr('y', ROWS[r]);
-			})
-		);
+	if (previous_row == r) {
+		digit.flip();
+		rect.attr("fill", digit.fill_color())
+	} else {
+		digit.move_to_row(r);
+		rect.attr('y', ROWS[r]);
+	}
 }
 
 function graph_abacus(abacus, on_update_callback) {
@@ -176,10 +169,31 @@ function graph_abacus(abacus, on_update_callback) {
 		.attr("stroke-width", LINE_STROKE_WIDTH)
 		.attr("stroke", "black");
 
+	abacus.digit_rects = [];
+
 	for (var i = 0; i < abacus.num_columns; i++) {
 		var column = NUM_COLUMNS - i - 1;
 		var dgt = abacus.digits[i];
+		var border_color = "black";
+		var r = svgContainer.append("rect")
+			.attr("x", COLUMNS[column] - (ROW_HEIGHT / 2))
+			.attr("y", ROWS[dgt.row()])
+			.attr("width", ROW_HEIGHT)
+			.attr("height", ROW_HEIGHT)
+			.attr("fill", dgt.fill_color())
+			.attr("stroke", border_color)
+			.attr("stroke-width", SQUARE_BORDER_WIDTH);
 
-		draw_digit(svgContainer, column, dgt, on_update_callback);
+		abacus.digit_rects[i] = r;
 	}
+
+	svgContainer.on('click', function() {
+          var coords = d3.mouse(this);
+
+          move_digit(abacus, coords);
+
+          on_update_callback();
+
+          d3.event.stopPropagation();
+	});
 }
