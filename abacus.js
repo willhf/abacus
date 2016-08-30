@@ -122,28 +122,28 @@ function Abacus(num_columns, n) {
 		}
 		return n;
 	}
+
+	this.move_digit_from_click = function(coords) {
+		var x = coords[0];
+		var y = coords[1];
+		var column = closest_column_to_cursor_x_position(x);
+		var r = closest_row_to_cursor_y_position(y);
+		var digit = this.digits[column];
+		var rect = this.digit_rects[column];
+		var previous_row = digit.row();
+
+		if (previous_row == r) {
+			digit.flip();
+			rect.attr("fill", digit.fill_color())
+		} else {
+			digit.move_to_row(r);
+			rect.attr('y', ROWS[r]);
+		}
+	}
 }
 
 function random_number(limit) {
 	return Math.floor(Math.random() * limit);
-}
-
-function move_digit(abacus, coords) {
-	var x = coords[0];
-	var y = coords[1];
-	var column = closest_column_to_cursor_x_position(x);
-	var r = closest_row_to_cursor_y_position(y);
-	var digit = abacus.digits[column];
-	var rect = abacus.digit_rects[column];
-	var previous_row = digit.row();
-
-	if (previous_row == r) {
-		digit.flip();
-		rect.attr("fill", digit.fill_color())
-	} else {
-		digit.move_to_row(r);
-		rect.attr('y', ROWS[r]);
-	}
 }
 
 function graph_abacus(abacus, on_update_callback) {
@@ -190,7 +190,7 @@ function graph_abacus(abacus, on_update_callback) {
 	svgContainer.on('click', function() {
           var coords = d3.mouse(this);
 
-          move_digit(abacus, coords);
+          abacus.move_digit_from_click(coords);
 
           on_update_callback();
 
