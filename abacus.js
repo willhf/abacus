@@ -153,7 +153,8 @@ function graph_abacus(abacus, on_update_callback) {
 		.attr("width", TOTAL_WIDTH)
 		.attr("height", TOTAL_HEIGHT);
 
-	var top_line = svg.append("line")
+	// Top Line
+	svg.append("line")
 		.attr("x1", 0)
 		.attr("x2", TOTAL_WIDTH)
 		.attr("y1", TOP_LINE_HEIGHT)
@@ -161,7 +162,8 @@ function graph_abacus(abacus, on_update_callback) {
 		.attr("stroke-width", LINE_STROKE_WIDTH)
 		.attr("stroke", "black");
 
-	var bottom_line = svg.append("line")
+	// Bottom Line
+	svg.append("line")
 		.attr("x1", 0)
 		.attr("x2", TOTAL_WIDTH)
 		.attr("y1", BOTTOM_LINE_HEIGHT)
