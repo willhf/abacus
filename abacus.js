@@ -148,12 +148,12 @@ function random_number(limit) {
 
 function graph_abacus(abacus, on_update_callback) {
 
-	var svgContainer = window.d3.select("body")
+	var svg = window.d3.select("body")
 		.append("svg")
 		.attr("width", TOTAL_WIDTH)
 		.attr("height", TOTAL_HEIGHT);
 
-	var top_line = svgContainer.append("line")
+	var top_line = svg.append("line")
 		.attr("x1", 0)
 		.attr("x2", TOTAL_WIDTH)
 		.attr("y1", TOP_LINE_HEIGHT)
@@ -161,7 +161,7 @@ function graph_abacus(abacus, on_update_callback) {
 		.attr("stroke-width", LINE_STROKE_WIDTH)
 		.attr("stroke", "black");
 
-	var bottom_line = svgContainer.append("line")
+	var bottom_line = svg.append("line")
 		.attr("x1", 0)
 		.attr("x2", TOTAL_WIDTH)
 		.attr("y1", BOTTOM_LINE_HEIGHT)
@@ -175,7 +175,7 @@ function graph_abacus(abacus, on_update_callback) {
 		var column = NUM_COLUMNS - i - 1;
 		var dgt = abacus.digits[i];
 		var border_color = "black";
-		var r = svgContainer.append("rect")
+		var r = svg.append("rect")
 			.attr("x", COLUMNS[column] - (ROW_HEIGHT / 2))
 			.attr("y", ROWS[dgt.row()])
 			.attr("width", ROW_HEIGHT)
@@ -187,7 +187,7 @@ function graph_abacus(abacus, on_update_callback) {
 		abacus.digit_rects[i] = r;
 	}
 
-	svgContainer.on('click', function() {
+	svg.on('click', function() {
           var coords = d3.mouse(this);
 
           abacus.move_digit_from_click(coords);
