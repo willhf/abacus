@@ -195,7 +195,5 @@ function graph_abacus(abacus, on_update_callback) {
           abacus.move_digit_from_click(coords);
 
           on_update_callback();
-
-          d3.event.stopPropagation();
 	});
 }
