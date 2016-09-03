@@ -57,6 +57,10 @@ function Digit(val, place) {
 	this.val = val;
 	this.place = place;
 
+	this.set_val = function (v) {
+		this.val = v;
+	}
+
 	this.number = function () {
 		return this.val * this.place;
 	}
@@ -97,22 +101,15 @@ function Digit(val, place) {
 	}
 }
 
-function Abacus(num_columns, n) {
-	this.num_columns = num_columns;
-	this.digits = [];
-
+function Abacus(num_columns, n, on_update_callback) {
 	this.set_number = function(num) {
-		var place = 1;
-
 		for (var i = 0; i < this.num_columns; i++) {
+			var place = Math.pow(10, i);
 			var d = Math.floor(num / place) % 10;
 
-			this.digits[i] = new Digit(d, place);
-			place *= 10;
+			this.digits[i].set_val(d);
 		}
 	};
-
-	this.set_number(n);
 
 	this.get_number = function() {
 		var n = 0;
@@ -140,21 +137,22 @@ function Abacus(num_columns, n) {
 			rect.attr('y', ROWS[r]);
 		}
 	}
-}
 
-function random_number(limit) {
-	return Math.floor(Math.random() * limit);
-}
+	this.on_update_callback = on_update_callback;
+	this.num_columns = num_columns;
+	this.digits = [];
+	for (var i = 0; i < this.num_columns; i++) {
+		this.digits[i] = new Digit(0, Math.pow(10, i));
+	}
+	this.set_number(n);
 
-function graph_abacus(abacus, on_update_callback) {
-
-	var svg = window.d3.select("body")
+	this.svg = window.d3.select("body")
 		.append("svg")
 		.attr("width", TOTAL_WIDTH)
 		.attr("height", TOTAL_HEIGHT);
 
 	// Top Line
-	svg.append("line")
+	this.svg.append("line")
 		.attr("x1", 0)
 		.attr("x2", TOTAL_WIDTH)
 		.attr("y1", TOP_LINE_HEIGHT)
@@ -163,7 +161,7 @@ function graph_abacus(abacus, on_update_callback) {
 		.attr("stroke", "black");
 
 	// Bottom Line
-	svg.append("line")
+	this.svg.append("line")
 		.attr("x1", 0)
 		.attr("x2", TOTAL_WIDTH)
 		.attr("y1", BOTTOM_LINE_HEIGHT)
@@ -171,13 +169,13 @@ function graph_abacus(abacus, on_update_callback) {
 		.attr("stroke-width", LINE_STROKE_WIDTH)
 		.attr("stroke", "black");
 
-	abacus.digit_rects = [];
+	this.digit_rects = [];
 
-	for (var i = 0; i < abacus.num_columns; i++) {
+	for (var i = 0; i < this.num_columns; i++) {
 		var column = NUM_COLUMNS - i - 1;
-		var dgt = abacus.digits[i];
+		var dgt = this.digits[i];
 		var border_color = "black";
-		var r = svg.append("rect")
+		var r = this.svg.append("rect")
 			.attr("x", COLUMNS[column] - (ROW_HEIGHT / 2))
 			.attr("y", ROWS[dgt.row()])
 			.attr("width", ROW_HEIGHT)
@@ -186,14 +184,18 @@ function graph_abacus(abacus, on_update_callback) {
 			.attr("stroke", border_color)
 			.attr("stroke-width", SQUARE_BORDER_WIDTH);
 
-		abacus.digit_rects[i] = r;
+		this.digit_rects[i] = r;
 	}
 
-	svg.on('click', function() {
-          var coords = d3.mouse(this);
+	var ab = this;
+	this.svg.on('click', function() {
+		var coords = d3.mouse(this);
 
-          abacus.move_digit_from_click(coords);
-
-          on_update_callback();
+          ab.move_digit_from_click(coords);
+          ab.on_update_callback(ab);
 	});
+}
+
+function random_number(limit) {
+	return Math.floor(Math.random() * limit);
 }

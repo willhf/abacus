@@ -12,14 +12,12 @@
 	}
 
 	var start = random_number(1000);
-	var ab = new Abacus(4, start);
-
 	var next_add = random_digit();
-	document.getElementById('question').innerHTML = next_add;
 	var answer = start + next_add;
+	document.getElementById('question').innerHTML = next_add;
 
-	graph_abacus(ab, function() {
-		val = ab.get_number();
+	new Abacus(4, start, function(ab) {
+		var val = ab.get_number();
 
 		if (val != answer) {
 			return;

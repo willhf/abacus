@@ -11,8 +11,7 @@
 	<script type="text/javascript">
 
 	var answer = random_number(10*1000);
-	var ab = new Abacus(4, answer);
-	graph_abacus(ab, function(){});
+	var ab = new Abacus(4, answer, function(x){});
 
 	function identification_game() {
 		var guess_string = document.getElementById("answer").value;
@@ -33,8 +32,8 @@
 
 		answer = random_number(10*1000);
 		ab.set_number(answer);
-		d3.select("svg").remove();
-		graph_abacus(ab, function(){});
+		// d3.select("svg").remove();
+		// graph_abacus(ab, function(){});
 	}
 
 	</script>
