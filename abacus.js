@@ -96,7 +96,6 @@ function Digit(val, place, column, svg) {
 
 	this.move_to_row = function (r) {
 		var diff = r - this.row();
-
 		if (0 == diff) {
 			this.flip();
 			return;
@@ -141,13 +140,7 @@ function Abacus(num_columns, n, on_update_callback) {
 		var column = closest_column_to_cursor_x_position(x);
 		var r = closest_row_to_cursor_y_position(y);
 		var digit = this.digits[column];
-		var previous_row = digit.row();
-
-		if (previous_row == r) {
-			digit.flip();
-		} else {
-			digit.move_to_row(r);
-		}
+		digit.move_to_row(r);
 	}
 
 	this.svg = window.d3.select("body")
