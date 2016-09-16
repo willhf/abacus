@@ -53,12 +53,16 @@ function closest_column_to_cursor_x_position(x) {
 }
 
 
-function Digit(val, place) {
+function Digit(val, place, column, svg) {
 	this.val = val;
 	this.place = place;
+	this.column = column;
 
 	this.set_val = function (v) {
 		this.val = v;
+		this.rect.attr("x", COLUMNS[column] - (ROW_HEIGHT / 2));
+		this.rect.attr("y", ROWS[this.row()]);
+		this.rect.attr("fill", this.fill_color());
 	}
 
 	this.number = function () {
@@ -87,6 +91,7 @@ function Digit(val, place) {
 		} else {
 			this.val += 5;
 		}
+		this.rect.attr("fill", this.fill_color())
 	}
 
 	this.move_to_row = function (r) {
@@ -98,7 +103,17 @@ function Digit(val, place) {
 		}
 
 		this.val -= diff;
+		this.rect.attr('y', ROWS[r]);
 	}
+
+	this.rect = svg.append("rect")
+		.attr("x", COLUMNS[column] - (ROW_HEIGHT / 2))
+		.attr("y", ROWS[this.row()])
+		.attr("width", ROW_HEIGHT)
+		.attr("height", ROW_HEIGHT)
+		.attr("fill", this.fill_color())
+		.attr("stroke", "black") // border color
+		.attr("stroke-width", SQUARE_BORDER_WIDTH);
 }
 
 function Abacus(num_columns, n, on_update_callback) {
@@ -126,25 +141,14 @@ function Abacus(num_columns, n, on_update_callback) {
 		var column = closest_column_to_cursor_x_position(x);
 		var r = closest_row_to_cursor_y_position(y);
 		var digit = this.digits[column];
-		var rect = this.digit_rects[column];
 		var previous_row = digit.row();
 
 		if (previous_row == r) {
 			digit.flip();
-			rect.attr("fill", digit.fill_color())
 		} else {
 			digit.move_to_row(r);
-			rect.attr('y', ROWS[r]);
 		}
 	}
-
-	this.on_update_callback = on_update_callback;
-	this.num_columns = num_columns;
-	this.digits = [];
-	for (var i = 0; i < this.num_columns; i++) {
-		this.digits[i] = new Digit(0, Math.pow(10, i));
-	}
-	this.set_number(n);
 
 	this.svg = window.d3.select("body")
 		.append("svg")
@@ -169,23 +173,13 @@ function Abacus(num_columns, n, on_update_callback) {
 		.attr("stroke-width", LINE_STROKE_WIDTH)
 		.attr("stroke", "black");
 
-	this.digit_rects = [];
-
+	this.on_update_callback = on_update_callback;
+	this.num_columns = num_columns;
+	this.digits = [];
 	for (var i = 0; i < this.num_columns; i++) {
-		var column = NUM_COLUMNS - i - 1;
-		var dgt = this.digits[i];
-		var border_color = "black";
-		var r = this.svg.append("rect")
-			.attr("x", COLUMNS[column] - (ROW_HEIGHT / 2))
-			.attr("y", ROWS[dgt.row()])
-			.attr("width", ROW_HEIGHT)
-			.attr("height", ROW_HEIGHT)
-			.attr("fill", dgt.fill_color())
-			.attr("stroke", border_color)
-			.attr("stroke-width", SQUARE_BORDER_WIDTH);
-
-		this.digit_rects[i] = r;
+		this.digits[i] = new Digit(0, Math.pow(10, i), NUM_COLUMNS - i - 1, this.svg);
 	}
+	this.set_number(n);
 
 	var ab = this;
 	this.svg.on('click', function() {
