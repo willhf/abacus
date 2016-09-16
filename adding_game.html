@@ -7,12 +7,12 @@
 	<script src="abacus.js" charset="utf-8"></script>
 	<script type="text/javascript">
 
-	function random_digit() {
-		return Math.floor(Math.random() * 9) + 1;
+	function random_nonzero_digit() {
+		return random_number(9) + 1;
 	}
 
 	var start = random_number(1000);
-	var next_add = random_digit();
+	var next_add = random_nonzero_digit();
 	var answer = start + next_add;
 	document.getElementById('question').innerHTML = next_add;
 
@@ -24,9 +24,9 @@
 		}
 
 		var prev_next_add = next_add;
-		next_add = random_digit();
+		next_add = random_nonzero_digit();
 		while (next_add == prev_next_add) {
-			next_add = random_digit();
+			next_add = random_nonzero_digit();
 		}
 		answer = val + next_add;
 		document.getElementById('question').innerHTML = next_add;
