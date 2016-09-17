@@ -30,10 +30,6 @@ var COLUMNS = [
 
 var NUM_COLUMNS = 4;
 
-var SQUARE_BORDER_WIDTH = 5;
-var FILL_COLOR_5_THRU_9 = "black";
-var FILL_COLOR_0_THRU_4 = "white";
-
 // Finds the index of the row which is closest to y.
 function closest_row_to_cursor_y_position(y) {
 	var offset = y - ROW_BASE -
@@ -58,6 +54,10 @@ function toggle_labels(ab) {
 }
 
 function Abacus(num_columns, n, on_update_callback) {
+	var SQUARE_BORDER_WIDTH = 5;
+	var SQUARE_BORDER_COLOR = "black";
+	var FILL_COLOR_5_THRU_9 = "black";
+	var FILL_COLOR_0_THRU_4 = "white";
 
 	function Digit(params) {
 		this.val = params.val;
@@ -107,8 +107,8 @@ function Abacus(num_columns, n, on_update_callback) {
 			.attr("width", ROW_HEIGHT)
 			.attr("height", ROW_HEIGHT)
 			.attr("fill", this.fill_color())
-			.attr("stroke", "black") // border color
-			.attr("stroke-width", params.border_width);
+			.attr("stroke", SQUARE_BORDER_COLOR)
+			.attr("stroke-width", SQUARE_BORDER_WIDTH);
 
 		this.text = params.svg.append("text")
 			.attr("text-anchor", "middle")
@@ -179,8 +179,7 @@ function Abacus(num_columns, n, on_update_callback) {
 			val: 0,
 			svg: this.svg,
 			x: COLUMNS[NUM_COLUMNS - i - 1] - (ROW_HEIGHT / 2),
-			rows: ROWS,
-			border_width: SQUARE_BORDER_WIDTH
+			rows: ROWS
 		});
 	}
 	this.set_number(n);
