@@ -107,7 +107,7 @@ function Abacus(num_columns, n, on_update_callback) {
 			}
 			this.redraw();
 		}
-		this.labels_visibility = function () {
+		var labels_visibility = function () {
 			return show_labels ? "visible" : "hidden";
 		}
 
@@ -118,7 +118,7 @@ function Abacus(num_columns, n, on_update_callback) {
 			this.text.attr("y", params.rows[r] + this.text_offset + 15);
 			this.text.attr("fill", this.text_color());
 			this.text.text(this.val);
-			this.text.style("visibility", this.labels_visibility());
+			this.text.style("visibility", labels_visibility());
 		}
 
 		this.rect = svg.append("rect")
@@ -138,7 +138,7 @@ function Abacus(num_columns, n, on_update_callback) {
 			.attr("font-size", "50px")
 			.attr("fill", this.text_color())
 			.text(this.val)
-			.style("visibility", this.labels_visibility());
+			.style("visibility", labels_visibility());
 	}
 
 	this.set_number = function(num) {
