@@ -47,17 +47,13 @@ function closest_column_to_cursor_x_position(x) {
 	return NUM_COLUMNS - c - 1;
 }
 
-var show_labels = false;
-function toggle_labels(ab) {
-	show_labels = !show_labels;
-	ab.set_number(ab.get_number());
-}
-
 function Abacus(num_columns, n, on_update_callback) {
 	var SQUARE_BORDER_WIDTH = 5;
 	var SQUARE_BORDER_COLOR = "black";
 	var FILL_COLOR_5_THRU_9 = "black";
 	var FILL_COLOR_0_THRU_4 = "white";
+
+	var show_labels = false;
 
 	function Digit(params) {
 		this.val = params.val;
@@ -191,6 +187,15 @@ function Abacus(num_columns, n, on_update_callback) {
           ab.move_digit_from_click(coords);
           ab.on_update_callback(ab);
 	});
+
+	this.redraw = function() {
+		this.set_number(this.get_number());
+	}
+
+	this.toggle_labels = function() {
+		show_labels = !show_labels;
+		this.redraw();
+	}
 }
 
 function random_number(limit) {
