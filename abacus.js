@@ -168,7 +168,6 @@ function Abacus(num_columns, n, on_update_callback) {
 		digit.move_to_row(r);
 	}
 
-	this.on_update_callback = on_update_callback;
 	this.num_columns = num_columns;
 	this.digits = [];
 	for (var i = 0; i < this.num_columns; i++) {
@@ -185,7 +184,7 @@ function Abacus(num_columns, n, on_update_callback) {
 		var coords = d3.mouse(this);
 
           ab.move_digit_from_click(coords);
-          ab.on_update_callback(ab);
+          on_update_callback(ab);
 	});
 
 	this.redraw = function() {
