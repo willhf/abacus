@@ -55,6 +55,30 @@ function Abacus(num_columns, n, on_update_callback) {
 
 	var show_labels = false;
 
+
+	var svg = window.d3.select("body")
+		.append("svg")
+		.attr("width", TOTAL_WIDTH)
+		.attr("height", TOTAL_HEIGHT);
+
+	// Top Line
+	svg.append("line")
+		.attr("x1", 0)
+		.attr("x2", TOTAL_WIDTH)
+		.attr("y1", TOP_LINE_HEIGHT)
+		.attr("y2", TOP_LINE_HEIGHT)
+		.attr("stroke-width", LINE_STROKE_WIDTH)
+		.attr("stroke", "black");
+
+	// Bottom Line
+	svg.append("line")
+		.attr("x1", 0)
+		.attr("x2", TOTAL_WIDTH)
+		.attr("y1", BOTTOM_LINE_HEIGHT)
+		.attr("y2", BOTTOM_LINE_HEIGHT)
+		.attr("stroke-width", LINE_STROKE_WIDTH)
+		.attr("stroke", "black");
+
 	function Digit(params) {
 		this.val = params.val;
 		this.text_offset = (ROW_HEIGHT / 2);
@@ -97,7 +121,7 @@ function Abacus(num_columns, n, on_update_callback) {
 			this.text.style("visibility", this.labels_visibility());
 		}
 
-		this.rect = params.svg.append("rect")
+		this.rect = svg.append("rect")
 			.attr("x", params.x)
 			.attr("y", params.rows[this.row()])
 			.attr("width", ROW_HEIGHT)
@@ -106,7 +130,7 @@ function Abacus(num_columns, n, on_update_callback) {
 			.attr("stroke", SQUARE_BORDER_COLOR)
 			.attr("stroke-width", SQUARE_BORDER_WIDTH);
 
-		this.text = params.svg.append("text")
+		this.text = svg.append("text")
 			.attr("text-anchor", "middle")
 			.attr("x", params.x + this.text_offset)
 			.attr("y", params.rows[this.row()] + this.text_offset + 15)
@@ -144,36 +168,12 @@ function Abacus(num_columns, n, on_update_callback) {
 		digit.move_to_row(r);
 	}
 
-	this.svg = window.d3.select("body")
-		.append("svg")
-		.attr("width", TOTAL_WIDTH)
-		.attr("height", TOTAL_HEIGHT);
-
-	// Top Line
-	this.svg.append("line")
-		.attr("x1", 0)
-		.attr("x2", TOTAL_WIDTH)
-		.attr("y1", TOP_LINE_HEIGHT)
-		.attr("y2", TOP_LINE_HEIGHT)
-		.attr("stroke-width", LINE_STROKE_WIDTH)
-		.attr("stroke", "black");
-
-	// Bottom Line
-	this.svg.append("line")
-		.attr("x1", 0)
-		.attr("x2", TOTAL_WIDTH)
-		.attr("y1", BOTTOM_LINE_HEIGHT)
-		.attr("y2", BOTTOM_LINE_HEIGHT)
-		.attr("stroke-width", LINE_STROKE_WIDTH)
-		.attr("stroke", "black");
-
 	this.on_update_callback = on_update_callback;
 	this.num_columns = num_columns;
 	this.digits = [];
 	for (var i = 0; i < this.num_columns; i++) {
 		this.digits[i] = new Digit({
 			val: 0,
-			svg: this.svg,
 			x: COLUMNS[NUM_COLUMNS - i - 1] - (ROW_HEIGHT / 2),
 			rows: ROWS
 		});
@@ -181,7 +181,7 @@ function Abacus(num_columns, n, on_update_callback) {
 	this.set_number(n);
 
 	var ab = this;
-	this.svg.on('click', function() {
+	svg.on('click', function() {
 		var coords = d3.mouse(this);
 
           ab.move_digit_from_click(coords);
