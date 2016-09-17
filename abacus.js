@@ -139,15 +139,6 @@ function Abacus(num_columns, n, on_update_callback) {
 		return n;
 	}
 
-	this.move_digit_from_click = function(coords) {
-		var x = coords[0];
-		var y = coords[1];
-		var column = closest_column_to_cursor_x_position(x);
-		var r = closest_row_to_cursor_y_position(y);
-		var digit = digits[column];
-		digit.move_to_row(r);
-	}
-
 	this.redraw = function() {
 		this.set_number(this.get_number());
 	}
@@ -191,8 +182,13 @@ function Abacus(num_columns, n, on_update_callback) {
 
 	svg.on('click', function() {
 		var coords = d3.mouse(this);
+		var x = coords[0];
+		var y = coords[1];
+		var column = closest_column_to_cursor_x_position(x);
+		var r = closest_row_to_cursor_y_position(y);
+		var digit = digits[column];
+		digit.move_to_row(r);
 
-		that.move_digit_from_click(coords);
 		on_update_callback(that);
 	});
 }
