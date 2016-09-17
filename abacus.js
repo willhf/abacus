@@ -81,7 +81,7 @@ function Abacus(num_columns, n, on_update_callback) {
 
 	function Digit(params) {
 		this.val = params.val;
-		this.text_offset = (ROW_HEIGHT / 2);
+		var text_offset = (ROW_HEIGHT / 2);
 
 		this.set_val = function (v) {
 			this.val = v;
@@ -115,7 +115,7 @@ function Abacus(num_columns, n, on_update_callback) {
 			var r = this.row();
 			this.rect.attr("y", params.rows[r]);
 			this.rect.attr("fill", this.fill_color());
-			this.text.attr("y", params.rows[r] + this.text_offset + 15);
+			this.text.attr("y", params.rows[r] + text_offset + 15);
 			this.text.attr("fill", this.text_color());
 			this.text.text(this.val);
 			this.text.style("visibility", labels_visibility());
@@ -132,8 +132,8 @@ function Abacus(num_columns, n, on_update_callback) {
 
 		this.text = svg.append("text")
 			.attr("text-anchor", "middle")
-			.attr("x", params.x + this.text_offset)
-			.attr("y", params.rows[this.row()] + this.text_offset + 15)
+			.attr("x", params.x + text_offset)
+			.attr("y", params.rows[this.row()] + text_offset + 15)
 			.attr("font-family", "sans-serif")
 			.attr("font-size", "50px")
 			.attr("fill", this.text_color())
