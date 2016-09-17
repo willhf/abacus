@@ -146,7 +146,7 @@ function Abacus(num_columns, n, on_update_callback) {
 			var place = Math.pow(10, i);
 			var d = Math.floor(num / place) % 10;
 
-			this.digits[i].set_val(d);
+			digits[i].set_val(d);
 		}
 	};
 
@@ -154,7 +154,7 @@ function Abacus(num_columns, n, on_update_callback) {
 		var n = 0;
 
 		for (var i = 0; i < this.num_columns; i++) {
-			n += this.digits[i].val * Math.pow(10, i);
+			n += digits[i].val * Math.pow(10, i);
 		}
 		return n;
 	}
@@ -164,14 +164,14 @@ function Abacus(num_columns, n, on_update_callback) {
 		var y = coords[1];
 		var column = closest_column_to_cursor_x_position(x);
 		var r = closest_row_to_cursor_y_position(y);
-		var digit = this.digits[column];
+		var digit = digits[column];
 		digit.move_to_row(r);
 	}
 
 	this.num_columns = num_columns;
-	this.digits = [];
+	var digits = [];
 	for (var i = 0; i < this.num_columns; i++) {
-		this.digits[i] = new Digit({
+		digits[i] = new Digit({
 			val: 0,
 			x: COLUMNS[NUM_COLUMNS - i - 1] - (ROW_HEIGHT / 2),
 			rows: ROWS
