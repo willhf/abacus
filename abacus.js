@@ -79,6 +79,7 @@ function Abacus(num_columns, n, on_update_callback) {
 		.attr("stroke", "black");
 
 	function Digit(params) {
+		var that = this;
 		this.val = params.val;
 		var text_offset = (ROW_HEIGHT / 2);
 
@@ -87,11 +88,11 @@ function Abacus(num_columns, n, on_update_callback) {
 			this.redraw();
 		}
 
-		this.fill_color = function () {
-			return (this.val > 4) ? FILL_COLOR_5_THRU_9 : FILL_COLOR_0_THRU_4;
+		var fill_color = function () {
+			return (that.val > 4) ? FILL_COLOR_5_THRU_9 : FILL_COLOR_0_THRU_4;
 		};
-		this.text_color = function () {
-			return (this.val > 4) ? FILL_COLOR_0_THRU_4 : FILL_COLOR_5_THRU_9;
+		var text_color = function () {
+			return (that.val > 4) ? FILL_COLOR_0_THRU_4 : FILL_COLOR_5_THRU_9;
 		}
 		this.row = function () {
 			return (this.val < 5) ? (4 - this.val) : (9 - this.val);
@@ -113,9 +114,9 @@ function Abacus(num_columns, n, on_update_callback) {
 		this.redraw = function () {
 			var r = this.row();
 			rect.attr("y", params.rows[r]);
-			rect.attr("fill", this.fill_color());
+			rect.attr("fill", fill_color());
 			text.attr("y", params.rows[r] + text_offset + 15);
-			text.attr("fill", this.text_color());
+			text.attr("fill", text_color());
 			text.text(this.val);
 			text.style("visibility", labels_visibility());
 		}
@@ -125,7 +126,7 @@ function Abacus(num_columns, n, on_update_callback) {
 			.attr("y", params.rows[this.row()])
 			.attr("width", ROW_HEIGHT)
 			.attr("height", ROW_HEIGHT)
-			.attr("fill", this.fill_color())
+			.attr("fill", fill_color())
 			.attr("stroke", SQUARE_BORDER_COLOR)
 			.attr("stroke-width", SQUARE_BORDER_WIDTH);
 
@@ -135,7 +136,7 @@ function Abacus(num_columns, n, on_update_callback) {
 			.attr("y", params.rows[this.row()] + text_offset + 15)
 			.attr("font-family", "sans-serif")
 			.attr("font-size", "50px")
-			.attr("fill", this.text_color())
+			.attr("fill", text_color())
 			.text(this.val)
 			.style("visibility", labels_visibility());
 	}
