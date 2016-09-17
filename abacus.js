@@ -59,29 +59,6 @@ function Abacus(num_columns, n, on_update_callback) {
 
 	var show_labels = false;
 
-	var svg = window.d3.select("body")
-		.append("svg")
-		.attr("width", TOTAL_WIDTH)
-		.attr("height", TOTAL_HEIGHT);
-
-	// Top Line
-	svg.append("line")
-		.attr("x1", 0)
-		.attr("x2", TOTAL_WIDTH)
-		.attr("y1", TOP_LINE_HEIGHT)
-		.attr("y2", TOP_LINE_HEIGHT)
-		.attr("stroke-width", LINE_STROKE_WIDTH)
-		.attr("stroke", "black");
-
-	// Bottom Line
-	svg.append("line")
-		.attr("x1", 0)
-		.attr("x2", TOTAL_WIDTH)
-		.attr("y1", BOTTOM_LINE_HEIGHT)
-		.attr("y2", BOTTOM_LINE_HEIGHT)
-		.attr("stroke-width", LINE_STROKE_WIDTH)
-		.attr("stroke", "black");
-
 	function Digit(params) {
 		var that = this;
 		this.val = params.val;
@@ -171,6 +148,38 @@ function Abacus(num_columns, n, on_update_callback) {
 		digit.move_to_row(r);
 	}
 
+	this.redraw = function() {
+		this.set_number(this.get_number());
+	}
+
+	this.toggle_labels = function() {
+		show_labels = !show_labels;
+		this.redraw();
+	}
+
+	var svg = window.d3.select("body")
+		.append("svg")
+		.attr("width", TOTAL_WIDTH)
+		.attr("height", TOTAL_HEIGHT);
+
+	// Top Line
+	svg.append("line")
+		.attr("x1", 0)
+		.attr("x2", TOTAL_WIDTH)
+		.attr("y1", TOP_LINE_HEIGHT)
+		.attr("y2", TOP_LINE_HEIGHT)
+		.attr("stroke-width", LINE_STROKE_WIDTH)
+		.attr("stroke", "black");
+
+	// Bottom Line
+	svg.append("line")
+		.attr("x1", 0)
+		.attr("x2", TOTAL_WIDTH)
+		.attr("y1", BOTTOM_LINE_HEIGHT)
+		.attr("y2", BOTTOM_LINE_HEIGHT)
+		.attr("stroke-width", LINE_STROKE_WIDTH)
+		.attr("stroke", "black");
+
 	var digits = [];
 	for (var i = 0; i < num_columns; i++) {
 		digits[i] = new Digit({
@@ -186,15 +195,6 @@ function Abacus(num_columns, n, on_update_callback) {
 		that.move_digit_from_click(coords);
 		on_update_callback(that);
 	});
-
-	this.redraw = function() {
-		this.set_number(this.get_number());
-	}
-
-	this.toggle_labels = function() {
-		show_labels = !show_labels;
-		this.redraw();
-	}
 }
 
 function random_number(limit) {
