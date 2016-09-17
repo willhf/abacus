@@ -55,7 +55,6 @@ function Abacus(num_columns, n, on_update_callback) {
 
 	var show_labels = false;
 
-
 	var svg = window.d3.select("body")
 		.append("svg")
 		.attr("width", TOTAL_WIDTH)
