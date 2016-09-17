@@ -33,7 +33,6 @@ var NUM_COLUMNS = 4;
 var SQUARE_BORDER_WIDTH = 5;
 var FILL_COLOR_5_THRU_9 = "black";
 var FILL_COLOR_0_THRU_4 = "white";
-var BORDER_COLOR_FOCUS = "red";
 
 // Finds the index of the row which is closest to y.
 function closest_row_to_cursor_y_position(y) {
