@@ -106,7 +106,7 @@ function Abacus(num_columns, n, on_update_callback) {
 	}
 
 	this.set_number = function(num) {
-		for (var i = 0; i < num_columns; i++) {
+		for (var i = 0; i < digits.length; i++) {
 			var place = Math.pow(10, i);
 			var d = Math.floor(num / place) % 10;
 
@@ -117,7 +117,7 @@ function Abacus(num_columns, n, on_update_callback) {
 	this.get_number = function() {
 		var n = 0;
 
-		for (var i = 0; i < num_columns; i++) {
+		for (var i = 0; i < digits.length; i++) {
 			n += digits[i].val * Math.pow(10, i);
 		}
 		return n;
