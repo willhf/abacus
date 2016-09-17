@@ -18,23 +18,6 @@ var COLUMNS = [
 
 var NUM_COLUMNS = 4;
 
-// Finds the index of the row which is closest to y.
-function closest_row_to_cursor_y_position(y) {
-	var offset = y - ROW_BASE -
-		(ROW_HEIGHT / 2); // since we are dragging to the center of each row
-	var rounded = Math.round(offset / ROW_HEIGHT);
-
-	return Math.max(0, Math.min(4, rounded));
-}
-
-function closest_column_to_cursor_x_position(x) {
-	var offset = x - COLUMN_BASE;
-	var rounded = Math.round(offset / COLUMN_SIZE);
-	var c = Math.max(0, Math.min(COLUMNS.length - 1, rounded));
-
-	return NUM_COLUMNS - c - 1;
-}
-
 function Abacus(num_columns, n, on_update_callback) {
 	var that = this;
 	var SQUARE_BORDER_WIDTH = 5;
@@ -146,6 +129,22 @@ function Abacus(num_columns, n, on_update_callback) {
 	this.toggle_labels = function() {
 		show_labels = !show_labels;
 		this.redraw();
+	}
+
+	var closest_row_to_cursor_y_position = function (y) {
+		var centering = (ROW_HEIGHT / 2); // since clicks are aiming for the center of each row
+		var offset = y - ROW_BASE - centering;
+		var rounded = Math.round(offset / ROW_HEIGHT);
+
+		return Math.max(0, Math.min(4, rounded));
+	}
+
+	var closest_column_to_cursor_x_position = function (x) {
+		var offset = x - COLUMN_BASE;
+		var rounded = Math.round(offset / COLUMN_SIZE);
+		var c = Math.max(0, Math.min(COLUMNS.length - 1, rounded));
+
+		return NUM_COLUMNS - c - 1;
 	}
 
 	var svg = window.d3.select("body")
