@@ -52,10 +52,8 @@ function closest_column_to_cursor_x_position(x) {
 	return NUM_COLUMNS - c - 1;
 }
 
-
-function Digit(val, place, column, svg) {
+function Digit(val, column, svg) {
 	this.val = val;
-	this.place = place;
 	this.column = column;
 
 	this.set_val = function (v) {
@@ -63,10 +61,6 @@ function Digit(val, place, column, svg) {
 		this.rect.attr("x", COLUMNS[column] - (ROW_HEIGHT / 2));
 		this.rect.attr("y", ROWS[this.row()]);
 		this.rect.attr("fill", this.fill_color());
-	}
-
-	this.number = function () {
-		return this.val * this.place;
 	}
 
 	this.fill_color = function () {
@@ -129,7 +123,7 @@ function Abacus(num_columns, n, on_update_callback) {
 		var n = 0;
 
 		for (var i = 0; i < this.num_columns; i++) {
-			n += this.digits[i].number();
+			n += this.digits[i].val * Math.pow(10, i);
 		}
 		return n;
 	}
@@ -170,7 +164,7 @@ function Abacus(num_columns, n, on_update_callback) {
 	this.num_columns = num_columns;
 	this.digits = [];
 	for (var i = 0; i < this.num_columns; i++) {
-		this.digits[i] = new Digit(0, Math.pow(10, i), NUM_COLUMNS - i - 1, this.svg);
+		this.digits[i] = new Digit(0, NUM_COLUMNS - i - 1, this.svg);
 	}
 	this.set_number(n);
 
