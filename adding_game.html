@@ -17,8 +17,8 @@
 	var answer = start + next_add;
 	document.getElementById('question').innerHTML = next_add;
 
-	var abacus = new Abacus(4, start, function(ab) {
-		var val = ab.get_number();
+	var ab = new Abacus(4, start, function(abacus) {
+		var val = abacus.get_number();
 
 		if (val != answer) {
 			return;
@@ -35,11 +35,11 @@
 	});
 
 	function reset_question() {
-		abacus.set_number(start);
+		ab.set_number(start);
 	}
 
 	</script>
-	<a href="javascript:void(0);" onclick="abacus.toggle_labels();">toggle labels</a>
+	<a href="javascript:void(0);" onclick="ab.toggle_labels();">toggle labels</a>
 	</body>
 </html>
 
