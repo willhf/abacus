@@ -4,7 +4,6 @@ var TOTAL_HEIGHT = 600;
 var ROW_HEIGHT = 100;
 var ROW_BASE = 50;
 
-var LINE_STROKE_WIDTH = 5;
 var COLUMN_SIZE = ROW_HEIGHT * 2 - 10;
 var COLUMN_BASE = 100;
 
@@ -42,6 +41,7 @@ function Abacus(num_columns, n, on_update_callback) {
 	var SQUARE_BORDER_COLOR = "black";
 	var FILL_COLOR_5_THRU_9 = "black";
 	var FILL_COLOR_0_THRU_4 = "white";
+	var LINE_STROKE_WIDTH = 5;
 
 	var ROWS = [
 		ROW_BASE + (ROW_HEIGHT * 0),
