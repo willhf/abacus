@@ -57,69 +57,70 @@ function toggle_labels(ab) {
 	ab.set_number(ab.get_number());
 }
 
-function Digit(params) {
-	this.val = params.val;
-	this.text_offset = (params.height / 2);
-
-	this.set_val = function (v) {
-		this.val = v;
-		this.redraw();
-	}
-
-	this.fill_color = function () {
-		return (this.val > 4) ? FILL_COLOR_5_THRU_9 : FILL_COLOR_0_THRU_4;
-	};
-	this.text_color = function () {
-		return (this.val > 4) ? FILL_COLOR_0_THRU_4 : FILL_COLOR_5_THRU_9;
-	}
-	this.row = function () {
-		return (this.val < 5) ? (4 - this.val) : (9 - this.val);
-	}
-
-	this.move_to_row = function (r) {
-		var diff = r - this.row();
-		if (0 == diff) {
-			this.val += (this.val >= 5) ? -5 : 5;
-		} else {
-			this.val -= diff;
-		}
-		this.redraw();
-	}
-	this.labels_visibility = function () {
-		return show_labels ? "visible" : "hidden";
-	}
-
-	this.redraw = function () {
-		var r = this.row();
-		this.rect.attr("y", params.rows[r]);
-		this.rect.attr("fill", this.fill_color());
-		this.text.attr("y", params.rows[r] + this.text_offset + 15);
-		this.text.attr("fill", this.text_color());
-		this.text.text(this.val);
-		this.text.style("visibility", this.labels_visibility());
-	}
-
-	this.rect = params.svg.append("rect")
-		.attr("x", params.x)
-		.attr("y", params.rows[this.row()])
-		.attr("width", params.height)
-		.attr("height", params.height)
-		.attr("fill", this.fill_color())
-		.attr("stroke", "black") // border color
-		.attr("stroke-width", params.border_width);
-
-	this.text = params.svg.append("text")
-		.attr("text-anchor", "middle")
-		.attr("x", params.x + this.text_offset)
-		.attr("y", params.rows[this.row()] + this.text_offset + 15)
-		.attr("font-family", "sans-serif")
-		.attr("font-size", "50px")
-		.attr("fill", this.text_color())
-		.text(this.val)
-		.style("visibility", this.labels_visibility());
-}
-
 function Abacus(num_columns, n, on_update_callback) {
+
+	function Digit(params) {
+		this.val = params.val;
+		this.text_offset = (params.height / 2);
+
+		this.set_val = function (v) {
+			this.val = v;
+			this.redraw();
+		}
+
+		this.fill_color = function () {
+			return (this.val > 4) ? FILL_COLOR_5_THRU_9 : FILL_COLOR_0_THRU_4;
+		};
+		this.text_color = function () {
+			return (this.val > 4) ? FILL_COLOR_0_THRU_4 : FILL_COLOR_5_THRU_9;
+		}
+		this.row = function () {
+			return (this.val < 5) ? (4 - this.val) : (9 - this.val);
+		}
+
+		this.move_to_row = function (r) {
+			var diff = r - this.row();
+			if (0 == diff) {
+				this.val += (this.val >= 5) ? -5 : 5;
+			} else {
+				this.val -= diff;
+			}
+			this.redraw();
+		}
+		this.labels_visibility = function () {
+			return show_labels ? "visible" : "hidden";
+		}
+
+		this.redraw = function () {
+			var r = this.row();
+			this.rect.attr("y", params.rows[r]);
+			this.rect.attr("fill", this.fill_color());
+			this.text.attr("y", params.rows[r] + this.text_offset + 15);
+			this.text.attr("fill", this.text_color());
+			this.text.text(this.val);
+			this.text.style("visibility", this.labels_visibility());
+		}
+
+		this.rect = params.svg.append("rect")
+			.attr("x", params.x)
+			.attr("y", params.rows[this.row()])
+			.attr("width", params.height)
+			.attr("height", params.height)
+			.attr("fill", this.fill_color())
+			.attr("stroke", "black") // border color
+			.attr("stroke-width", params.border_width);
+
+		this.text = params.svg.append("text")
+			.attr("text-anchor", "middle")
+			.attr("x", params.x + this.text_offset)
+			.attr("y", params.rows[this.row()] + this.text_offset + 15)
+			.attr("font-family", "sans-serif")
+			.attr("font-size", "50px")
+			.attr("fill", this.text_color())
+			.text(this.val)
+			.style("visibility", this.labels_visibility());
+	}
+
 	this.set_number = function(num) {
 		for (var i = 0; i < this.num_columns; i++) {
 			var place = Math.pow(10, i);
