@@ -95,12 +95,12 @@ function Abacus(num_columns, n, on_update_callback) {
 		var text_color = function () {
 			return (that.val > 4) ? FILL_COLOR_0_THRU_4 : FILL_COLOR_5_THRU_9;
 		}
-		this.row = function () {
-			return (this.val < 5) ? (4 - this.val) : (9 - this.val);
+		var row = function () {
+			return (that.val < 5) ? (4 - that.val) : (9 - that.val);
 		}
 
 		this.move_to_row = function (r) {
-			var diff = r - this.row();
+			var diff = r - row();
 			if (0 == diff) {
 				this.val += (this.val >= 5) ? -5 : 5;
 			} else {
@@ -113,7 +113,7 @@ function Abacus(num_columns, n, on_update_callback) {
 		}
 
 		this.redraw = function () {
-			var r = this.row();
+			var r = row();
 			rect.attr("y", params.rows[r]);
 			rect.attr("fill", fill_color());
 			text.attr("y", params.rows[r] + text_offset + 15);
@@ -124,7 +124,7 @@ function Abacus(num_columns, n, on_update_callback) {
 
 		var rect = svg.append("rect")
 			.attr("x", params.x)
-			.attr("y", params.rows[this.row()])
+			.attr("y", params.rows[row()])
 			.attr("width", ROW_HEIGHT)
 			.attr("height", ROW_HEIGHT)
 			.attr("fill", fill_color())
@@ -134,7 +134,7 @@ function Abacus(num_columns, n, on_update_callback) {
 		var text = svg.append("text")
 			.attr("text-anchor", "middle")
 			.attr("x", params.x + text_offset)
-			.attr("y", params.rows[this.row()] + text_offset + 15)
+			.attr("y", params.rows[row()] + text_offset + 15)
 			.attr("font-family", "sans-serif")
 			.attr("font-size", "50px")
 			.attr("fill", text_color())
