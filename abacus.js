@@ -4,17 +4,6 @@ var TOTAL_HEIGHT = 600;
 var ROW_HEIGHT = 100;
 var ROW_BASE = 50;
 
-var ROWS = [
-	ROW_BASE + (ROW_HEIGHT * 0),
-	ROW_BASE + (ROW_HEIGHT * 1),
-	ROW_BASE + (ROW_HEIGHT * 2),
-	ROW_BASE + (ROW_HEIGHT * 3),
-	ROW_BASE + (ROW_HEIGHT * 4),
-];
-
-var TOP_LINE_HEIGHT = ROWS[1];
-var BOTTOM_LINE_HEIGHT = ROWS[4];
-
 var LINE_STROKE_WIDTH = 5;
 var COLUMN_SIZE = ROW_HEIGHT * 2 - 10;
 var COLUMN_BASE = 100;
@@ -53,6 +42,17 @@ function Abacus(num_columns, n, on_update_callback) {
 	var SQUARE_BORDER_COLOR = "black";
 	var FILL_COLOR_5_THRU_9 = "black";
 	var FILL_COLOR_0_THRU_4 = "white";
+
+	var ROWS = [
+		ROW_BASE + (ROW_HEIGHT * 0),
+		ROW_BASE + (ROW_HEIGHT * 1),
+		ROW_BASE + (ROW_HEIGHT * 2),
+		ROW_BASE + (ROW_HEIGHT * 3),
+		ROW_BASE + (ROW_HEIGHT * 4),
+	];
+
+	var TOP_LINE_HEIGHT = ROWS[1];
+	var BOTTOM_LINE_HEIGHT = ROWS[4];
 
 	var TEXT_OFFSET_X = (ROW_HEIGHT / 2);
 	var TEXT_OFFSET_Y = (ROW_HEIGHT / 2) + 15;
@@ -116,9 +116,9 @@ function Abacus(num_columns, n, on_update_callback) {
 
 		var redraw = function () {
 			var r = row();
-			rect.attr("y", params.rows[r]);
+			rect.attr("y", ROWS[r]);
 			rect.attr("fill", fill_color());
-			text.attr("y", params.rows[r] + TEXT_OFFSET_Y);
+			text.attr("y", ROWS[r] + TEXT_OFFSET_Y);
 			text.attr("fill", text_color());
 			text.text(that.val);
 			text.style("visibility", labels_visibility());
@@ -126,7 +126,7 @@ function Abacus(num_columns, n, on_update_callback) {
 
 		var rect = svg.append("rect")
 			.attr("x", params.x)
-			.attr("y", params.rows[row()])
+			.attr("y", ROWS[row()])
 			.attr("width", ROW_HEIGHT)
 			.attr("height", ROW_HEIGHT)
 			.attr("fill", fill_color())
@@ -136,7 +136,7 @@ function Abacus(num_columns, n, on_update_callback) {
 		var text = svg.append("text")
 			.attr("text-anchor", "middle")
 			.attr("x", params.x + TEXT_OFFSET_X)
-			.attr("y", params.rows[row()] + TEXT_OFFSET_Y)
+			.attr("y", ROWS[row()] + TEXT_OFFSET_Y)
 			.attr("font-family", "sans-serif")
 			.attr("font-size", "50px")
 			.attr("fill", text_color())
@@ -175,8 +175,7 @@ function Abacus(num_columns, n, on_update_callback) {
 	for (var i = 0; i < num_columns; i++) {
 		digits[i] = new Digit({
 			val: 0,
-			x: COLUMNS[NUM_COLUMNS - i - 1] - (ROW_HEIGHT / 2),
-			rows: ROWS
+			x: COLUMNS[NUM_COLUMNS - i - 1] - (ROW_HEIGHT / 2)
 		});
 	}
 	this.set_number(n);
