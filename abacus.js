@@ -52,39 +52,26 @@ function closest_column_to_cursor_x_position(x) {
 	return NUM_COLUMNS - c - 1;
 }
 
-function Digit(val, column, svg) {
-	this.val = val;
-	this.column = column;
+function Digit(params) {
+	this.val = params.val;
 
 	this.set_val = function (v) {
 		this.val = v;
-		this.rect.attr("x", COLUMNS[column] - (ROW_HEIGHT / 2));
-		this.rect.attr("y", ROWS[this.row()]);
+		this.rect.attr("x", params.x);
+		this.rect.attr("y", params.rows[this.row()]);
 		this.rect.attr("fill", this.fill_color());
 	}
 
 	this.fill_color = function () {
-		if (this.val > 4) {
-			return FILL_COLOR_5_THRU_9;
-		} else {
-			return FILL_COLOR_0_THRU_4;
-		}
+		return (this.val > 4) ? FILL_COLOR_5_THRU_9 : FILL_COLOR_0_THRU_4;
 	};
 
 	this.row = function () {
-		if (this.val < 5) {
-			return 4 - this.val;
-		} else {
-			return 9 - this.val;
-		}
+		return (this.val < 5) ? (4 - this.val) : (9 - this.val);
 	}
 
 	this.flip = function () {
-		if (this.val >= 5) {
-			this.val -= 5;
-		} else {
-			this.val += 5;
-		}
+		this.val += (this.val >= 5) ? -5 : 5;
 		this.rect.attr("fill", this.fill_color())
 	}
 
@@ -94,19 +81,18 @@ function Digit(val, column, svg) {
 			this.flip();
 			return;
 		}
-
 		this.val -= diff;
-		this.rect.attr('y', ROWS[r]);
+		this.rect.attr('y', params.rows[r]);
 	}
 
-	this.rect = svg.append("rect")
-		.attr("x", COLUMNS[column] - (ROW_HEIGHT / 2))
-		.attr("y", ROWS[this.row()])
-		.attr("width", ROW_HEIGHT)
-		.attr("height", ROW_HEIGHT)
+	this.rect = params.svg.append("rect")
+		.attr("x", params.x)
+		.attr("y", params.rows[this.row()])
+		.attr("width", params.height)
+		.attr("height", params.height)
 		.attr("fill", this.fill_color())
 		.attr("stroke", "black") // border color
-		.attr("stroke-width", SQUARE_BORDER_WIDTH);
+		.attr("stroke-width", params.border_width);
 }
 
 function Abacus(num_columns, n, on_update_callback) {
@@ -164,7 +150,14 @@ function Abacus(num_columns, n, on_update_callback) {
 	this.num_columns = num_columns;
 	this.digits = [];
 	for (var i = 0; i < this.num_columns; i++) {
-		this.digits[i] = new Digit(0, NUM_COLUMNS - i - 1, this.svg);
+		this.digits[i] = new Digit({
+			val: 0,
+			svg: this.svg,
+			x: COLUMNS[NUM_COLUMNS - i - 1] - (ROW_HEIGHT / 2),
+			rows: ROWS,
+			height: ROW_HEIGHT,
+			border_width: SQUARE_BORDER_WIDTH
+		});
 	}
 	this.set_number(n);
 
