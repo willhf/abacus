@@ -48,6 +48,7 @@ function closest_column_to_cursor_x_position(x) {
 }
 
 function Abacus(num_columns, n, on_update_callback) {
+	var that = this;
 	var SQUARE_BORDER_WIDTH = 5;
 	var SQUARE_BORDER_COLOR = "black";
 	var FILL_COLOR_5_THRU_9 = "black";
@@ -179,12 +180,11 @@ function Abacus(num_columns, n, on_update_callback) {
 	}
 	this.set_number(n);
 
-	var ab = this;
 	svg.on('click', function() {
 		var coords = d3.mouse(this);
 
-          ab.move_digit_from_click(coords);
-          on_update_callback(ab);
+		that.move_digit_from_click(coords);
+		on_update_callback(that);
 	});
 
 	this.redraw = function() {
