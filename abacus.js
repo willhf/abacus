@@ -43,9 +43,9 @@ function Abacus(num_columns, n, on_update_callback) {
 
 	var show_labels = false;
 
-	function Digit(params) {
+	function Digit(val, x) {
 		var that = this;
-		this.val = params.val;
+		this.val = val;
 
 		this.set_val = function (v) {
 			this.val = v;
@@ -86,7 +86,7 @@ function Abacus(num_columns, n, on_update_callback) {
 		}
 
 		var rect = svg.append("rect")
-			.attr("x", params.x)
+			.attr("x", x)
 			.attr("y", ROWS[row()])
 			.attr("width", ROW_HEIGHT)
 			.attr("height", ROW_HEIGHT)
@@ -96,7 +96,7 @@ function Abacus(num_columns, n, on_update_callback) {
 
 		var text = svg.append("text")
 			.attr("text-anchor", "middle")
-			.attr("x", params.x + TEXT_OFFSET_X)
+			.attr("x", x + TEXT_OFFSET_X)
 			.attr("y", ROWS[row()] + TEXT_OFFSET_Y)
 			.attr("font-family", "sans-serif")
 			.attr("font-size", "50px")
@@ -173,10 +173,9 @@ function Abacus(num_columns, n, on_update_callback) {
 
 	var digits = [];
 	for (var i = 0; i < num_columns; i++) {
-		digits[i] = new Digit({
-			val: 0,
-			x: COLUMNS[NUM_COLUMNS - i - 1] - (ROW_HEIGHT / 2)
-		});
+		var x = COLUMNS[NUM_COLUMNS - i - 1] - (ROW_HEIGHT / 2);
+
+		digits[i] = new Digit(0, x);
 	}
 	this.set_number(n);
 
