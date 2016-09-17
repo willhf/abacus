@@ -1,25 +1,26 @@
-var TOTAL_WIDTH = 1000;
-var TOTAL_HEIGHT = 600;
-
-var ROW_HEIGHT = 100;
-var ROW_BASE = 50;
-
-var COLUMN_SIZE = ROW_HEIGHT * 2 - 10;
-var COLUMN_BASE = 100;
-
-// rects are centered on each column
-var COLUMNS = [
-	COLUMN_BASE + (COLUMN_SIZE * 0),
-	COLUMN_BASE + (COLUMN_SIZE * 1),
-	COLUMN_BASE + (COLUMN_SIZE * 2),
-	COLUMN_BASE + (COLUMN_SIZE * 3),
-	COLUMN_BASE + (COLUMN_SIZE * 4),
-];
-
-var NUM_COLUMNS = 4;
-
 function Abacus(num_columns, n, on_update_callback) {
 	var that = this;
+
+	var TOTAL_WIDTH = 1000;
+	var TOTAL_HEIGHT = 600;
+
+	var ROW_HEIGHT = 100;
+	var ROW_BASE = 50;
+
+	var COLUMN_SIZE = ROW_HEIGHT * 2 - 10;
+	var COLUMN_BASE = 100;
+
+	// rects are centered on each column
+	var COLUMNS = [
+		COLUMN_BASE + (COLUMN_SIZE * 0),
+		COLUMN_BASE + (COLUMN_SIZE * 1),
+		COLUMN_BASE + (COLUMN_SIZE * 2),
+		COLUMN_BASE + (COLUMN_SIZE * 3),
+		COLUMN_BASE + (COLUMN_SIZE * 4),
+	];
+
+	var NUM_COLUMNS = 4;
+
 	var SQUARE_BORDER_WIDTH = 5;
 	var SQUARE_BORDER_COLOR = "black";
 	var FILL_COLOR_5_THRU_9 = "black";
