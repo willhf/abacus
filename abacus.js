@@ -53,35 +53,40 @@ function closest_column_to_cursor_x_position(x) {
 
 function Digit(params) {
 	this.val = params.val;
+	this.text_offset = (params.height / 2);
 
 	this.set_val = function (v) {
 		this.val = v;
-		this.rect.attr("x", params.x);
-		this.rect.attr("y", params.rows[this.row()]);
-		this.rect.attr("fill", this.fill_color());
+		this.redraw();
 	}
 
 	this.fill_color = function () {
 		return (this.val > 4) ? FILL_COLOR_5_THRU_9 : FILL_COLOR_0_THRU_4;
 	};
-
+	this.text_color = function () {
+		return (this.val > 4) ? FILL_COLOR_0_THRU_4 : FILL_COLOR_5_THRU_9;
+	}
 	this.row = function () {
 		return (this.val < 5) ? (4 - this.val) : (9 - this.val);
-	}
-
-	this.flip = function () {
-		this.val += (this.val >= 5) ? -5 : 5;
-		this.rect.attr("fill", this.fill_color())
 	}
 
 	this.move_to_row = function (r) {
 		var diff = r - this.row();
 		if (0 == diff) {
-			this.flip();
-			return;
+			this.val += (this.val >= 5) ? -5 : 5;
+		} else {
+			this.val -= diff;
 		}
-		this.val -= diff;
-		this.rect.attr('y', params.rows[r]);
+		this.redraw();
+	}
+
+	this.redraw = function () {
+		var r = this.row();
+		this.rect.attr("y", params.rows[r]);
+		this.rect.attr("fill", this.fill_color());
+		this.text.attr("y", params.rows[r] + this.text_offset + 15);
+		this.text.attr("fill", this.text_color());
+		this.text.text(this.val);
 	}
 
 	this.rect = params.svg.append("rect")
@@ -92,6 +97,15 @@ function Digit(params) {
 		.attr("fill", this.fill_color())
 		.attr("stroke", "black") // border color
 		.attr("stroke-width", params.border_width);
+
+	this.text = params.svg.append("text")
+		.attr("text-anchor", "middle")
+		.attr("x", params.x + this.text_offset)
+		.attr("y", params.rows[this.row()] + this.text_offset + 15)
+		.attr("font-family", "sans-serif")
+		.attr("font-size", "50px")
+		.attr("fill", this.text_color())
+		.text(this.val);
 }
 
 function Abacus(num_columns, n, on_update_callback) {
