@@ -1,7 +1,7 @@
-var TOTAL_WIDTH = 500;
-var TOTAL_HEIGHT = 300;
+var TOTAL_WIDTH = 1000;
+var TOTAL_HEIGHT = 600;
 
-var ROW_HEIGHT = 40;
+var ROW_HEIGHT = 100;
 var ROW_BASE = 50;
 
 var ROWS = [
@@ -15,7 +15,7 @@ var ROWS = [
 var TOP_LINE_HEIGHT = ROWS[1];
 var BOTTOM_LINE_HEIGHT = ROWS[4];
 
-var LINE_STROKE_WIDTH = 3;
+var LINE_STROKE_WIDTH = 5;
 var COLUMN_SIZE = ROW_HEIGHT * 2 - 10;
 var COLUMN_BASE = 100;
 
@@ -30,7 +30,7 @@ var COLUMNS = [
 
 var NUM_COLUMNS = 4;
 
-var SQUARE_BORDER_WIDTH = 3;
+var SQUARE_BORDER_WIDTH = 5;
 var FILL_COLOR_5_THRU_9 = "black";
 var FILL_COLOR_0_THRU_4 = "white";
 var BORDER_COLOR_FOCUS = "red";
