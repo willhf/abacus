@@ -54,6 +54,9 @@ function Abacus(num_columns, n, on_update_callback) {
 	var FILL_COLOR_5_THRU_9 = "black";
 	var FILL_COLOR_0_THRU_4 = "white";
 
+	var TEXT_OFFSET_X = (ROW_HEIGHT / 2);
+	var TEXT_OFFSET_Y = (ROW_HEIGHT / 2) + 15;
+
 	var show_labels = false;
 
 	var svg = window.d3.select("body")
@@ -82,7 +85,6 @@ function Abacus(num_columns, n, on_update_callback) {
 	function Digit(params) {
 		var that = this;
 		this.val = params.val;
-		var text_offset = (ROW_HEIGHT / 2);
 
 		this.set_val = function (v) {
 			this.val = v;
@@ -116,7 +118,7 @@ function Abacus(num_columns, n, on_update_callback) {
 			var r = row();
 			rect.attr("y", params.rows[r]);
 			rect.attr("fill", fill_color());
-			text.attr("y", params.rows[r] + text_offset + 15);
+			text.attr("y", params.rows[r] + TEXT_OFFSET_Y);
 			text.attr("fill", text_color());
 			text.text(this.val);
 			text.style("visibility", labels_visibility());
@@ -133,8 +135,8 @@ function Abacus(num_columns, n, on_update_callback) {
 
 		var text = svg.append("text")
 			.attr("text-anchor", "middle")
-			.attr("x", params.x + text_offset)
-			.attr("y", params.rows[row()] + text_offset + 15)
+			.attr("x", params.x + TEXT_OFFSET_X)
+			.attr("y", params.rows[row()] + TEXT_OFFSET_Y)
 			.attr("font-family", "sans-serif")
 			.attr("font-size", "50px")
 			.attr("fill", text_color())
