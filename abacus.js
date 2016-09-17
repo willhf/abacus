@@ -51,6 +51,12 @@ function closest_column_to_cursor_x_position(x) {
 	return NUM_COLUMNS - c - 1;
 }
 
+var show_labels = false;
+function toggle_labels(ab) {
+	show_labels = !show_labels;
+	ab.set_number(ab.get_number());
+}
+
 function Digit(params) {
 	this.val = params.val;
 	this.text_offset = (params.height / 2);
@@ -79,6 +85,9 @@ function Digit(params) {
 		}
 		this.redraw();
 	}
+	this.labels_visibility = function () {
+		return show_labels ? "visible" : "hidden";
+	}
 
 	this.redraw = function () {
 		var r = this.row();
@@ -87,6 +96,7 @@ function Digit(params) {
 		this.text.attr("y", params.rows[r] + this.text_offset + 15);
 		this.text.attr("fill", this.text_color());
 		this.text.text(this.val);
+		this.text.style("visibility", this.labels_visibility());
 	}
 
 	this.rect = params.svg.append("rect")
@@ -105,7 +115,8 @@ function Digit(params) {
 		.attr("font-family", "sans-serif")
 		.attr("font-size", "50px")
 		.attr("fill", this.text_color())
-		.text(this.val);
+		.text(this.val)
+		.style("visibility", this.labels_visibility());
 }
 
 function Abacus(num_columns, n, on_update_callback) {
