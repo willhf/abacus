@@ -61,7 +61,7 @@ function Abacus(num_columns, n, on_update_callback) {
 
 	function Digit(params) {
 		this.val = params.val;
-		this.text_offset = (params.height / 2);
+		this.text_offset = (ROW_HEIGHT / 2);
 
 		this.set_val = function (v) {
 			this.val = v;
@@ -104,8 +104,8 @@ function Abacus(num_columns, n, on_update_callback) {
 		this.rect = params.svg.append("rect")
 			.attr("x", params.x)
 			.attr("y", params.rows[this.row()])
-			.attr("width", params.height)
-			.attr("height", params.height)
+			.attr("width", ROW_HEIGHT)
+			.attr("height", ROW_HEIGHT)
 			.attr("fill", this.fill_color())
 			.attr("stroke", "black") // border color
 			.attr("stroke-width", params.border_width);
@@ -180,7 +180,6 @@ function Abacus(num_columns, n, on_update_callback) {
 			svg: this.svg,
 			x: COLUMNS[NUM_COLUMNS - i - 1] - (ROW_HEIGHT / 2),
 			rows: ROWS,
-			height: ROW_HEIGHT,
 			border_width: SQUARE_BORDER_WIDTH
 		});
 	}
