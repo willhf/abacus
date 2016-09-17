@@ -113,15 +113,15 @@ function Abacus(num_columns, n, on_update_callback) {
 
 		this.redraw = function () {
 			var r = this.row();
-			this.rect.attr("y", params.rows[r]);
-			this.rect.attr("fill", this.fill_color());
-			this.text.attr("y", params.rows[r] + text_offset + 15);
-			this.text.attr("fill", this.text_color());
-			this.text.text(this.val);
-			this.text.style("visibility", labels_visibility());
+			rect.attr("y", params.rows[r]);
+			rect.attr("fill", this.fill_color());
+			text.attr("y", params.rows[r] + text_offset + 15);
+			text.attr("fill", this.text_color());
+			text.text(this.val);
+			text.style("visibility", labels_visibility());
 		}
 
-		this.rect = svg.append("rect")
+		var rect = svg.append("rect")
 			.attr("x", params.x)
 			.attr("y", params.rows[this.row()])
 			.attr("width", ROW_HEIGHT)
@@ -130,7 +130,7 @@ function Abacus(num_columns, n, on_update_callback) {
 			.attr("stroke", SQUARE_BORDER_COLOR)
 			.attr("stroke-width", SQUARE_BORDER_WIDTH);
 
-		this.text = svg.append("text")
+		var text = svg.append("text")
 			.attr("text-anchor", "middle")
 			.attr("x", params.x + text_offset)
 			.attr("y", params.rows[this.row()] + text_offset + 15)
