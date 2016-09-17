@@ -88,7 +88,7 @@ function Abacus(num_columns, n, on_update_callback) {
 
 		this.set_val = function (v) {
 			this.val = v;
-			this.redraw();
+			redraw();
 		}
 
 		var fill_color = function () {
@@ -108,19 +108,19 @@ function Abacus(num_columns, n, on_update_callback) {
 			} else {
 				this.val -= diff;
 			}
-			this.redraw();
+			redraw();
 		}
 		var labels_visibility = function () {
 			return show_labels ? "visible" : "hidden";
 		}
 
-		this.redraw = function () {
+		var redraw = function () {
 			var r = row();
 			rect.attr("y", params.rows[r]);
 			rect.attr("fill", fill_color());
 			text.attr("y", params.rows[r] + TEXT_OFFSET_Y);
 			text.attr("fill", text_color());
-			text.text(this.val);
+			text.text(that.val);
 			text.style("visibility", labels_visibility());
 		}
 
