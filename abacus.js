@@ -19,7 +19,7 @@ function Abacus(n, on_update_callback) {
 		COLUMN_BASE + (COLUMN_SIZE * 4),
 	];
 
-	var NUM_COLUMNS = 4;
+	var NUM_COLUMNS = 5;
 
 	var SQUARE_BORDER_WIDTH = 5;
 	var SQUARE_BORDER_COLOR = "black";
