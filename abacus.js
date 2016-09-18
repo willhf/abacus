@@ -1,4 +1,4 @@
-function Abacus(num_columns, n, on_update_callback) {
+function Abacus(n, on_update_callback) {
 	var that = this;
 
 	var TOTAL_WIDTH = 1000;
@@ -172,7 +172,7 @@ function Abacus(num_columns, n, on_update_callback) {
 		.attr("stroke", "black");
 
 	var digits = [];
-	for (var i = 0; i < num_columns; i++) {
+	for (var i = 0; i < NUM_COLUMNS; i++) {
 		var x = COLUMNS[NUM_COLUMNS - i - 1] - (ROW_HEIGHT / 2);
 
 		digits[i] = new Digit(0, x);
@@ -180,6 +180,8 @@ function Abacus(num_columns, n, on_update_callback) {
 	this.set_number(n);
 
 	svg.on('click', function() {
+		d3.event.stopPropagation();
+
 		var coords = d3.mouse(this);
 		var x = coords[0];
 		var y = coords[1];

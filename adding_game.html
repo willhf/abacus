@@ -17,7 +17,7 @@
 	var answer = start + next_add;
 	document.getElementById('question').innerHTML = next_add;
 
-	var ab = new Abacus(4, start, function(abacus) {
+	var ab = new Abacus(start, function(abacus) {
 		var val = abacus.get_number();
 
 		if (val != answer) {
