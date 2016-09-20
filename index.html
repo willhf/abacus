@@ -4,14 +4,15 @@
 	<body>
 	<a href="adding_game.html">adding game!</a>
 	<a href="identification_game.html">identification game!</a>
+	<svg id="abacus-svg" width="1000" height="600" ></svg>
 	</br>
-	<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script src="abacus.js" charset="utf-8"></script>
 	<script type="text/javascript">
 
-	var ab = new Abacus(0, function(x) {});
+	var ab = new Abacus(0, function(a){});
 
 	</script>
+	<a href="javascript:void(0);" onclick="ab.set_number(0);">zero</a>
 	<a href="javascript:void(0);" onclick="ab.toggle_labels();">toggle labels</a>
 	</body>
 </html>

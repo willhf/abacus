@@ -1,16 +1,20 @@
-function Abacus(n, on_update_callback) {
+function Abacus(start, on_update_callback) {
 	var that = this;
 
-	var TOTAL_WIDTH = 1000;
-	var TOTAL_HEIGHT = 600;
+	var SVG_WIDTH = 1000;
 
 	var ROW_HEIGHT = 100;
 	var ROW_BASE = 50;
 
-	var COLUMN_SIZE = ROW_HEIGHT * 2 - 10;
+	var COLUMN_SIZE = 175;
 	var COLUMN_BASE = 100;
 
+	var TEXT_SIZE = 50;
+	var TEXT_OFFSET_X = (ROW_HEIGHT / 2);
+	var TEXT_OFFSET_Y = (ROW_HEIGHT / 2) + 15; // 15 seems to make it look alright
+
 	// rects are centered on each column
+	var NUM_COLUMNS = 5;
 	var COLUMNS = [
 		COLUMN_BASE + (COLUMN_SIZE * 0),
 		COLUMN_BASE + (COLUMN_SIZE * 1),
@@ -18,14 +22,6 @@ function Abacus(n, on_update_callback) {
 		COLUMN_BASE + (COLUMN_SIZE * 3),
 		COLUMN_BASE + (COLUMN_SIZE * 4),
 	];
-
-	var NUM_COLUMNS = 5;
-
-	var SQUARE_BORDER_WIDTH = 5;
-	var SQUARE_BORDER_COLOR = "black";
-	var FILL_COLOR_5_THRU_9 = "black";
-	var FILL_COLOR_0_THRU_4 = "white";
-	var LINE_STROKE_WIDTH = 5;
 
 	var ROWS = [
 		ROW_BASE + (ROW_HEIGHT * 0),
@@ -35,163 +31,154 @@ function Abacus(n, on_update_callback) {
 		ROW_BASE + (ROW_HEIGHT * 4),
 	];
 
-	var TOP_LINE_HEIGHT = ROWS[1];
-	var BOTTOM_LINE_HEIGHT = ROWS[4];
-
-	var TEXT_OFFSET_X = (ROW_HEIGHT / 2);
-	var TEXT_OFFSET_Y = (ROW_HEIGHT / 2) + 15;
-
+	var digits = [0, 0, 0, 0, 0];
+	var rects = [];
+	var labels = [];
 	var show_labels = false;
 
-	function Digit(val, x) {
-		var that = this;
-		this.val = val;
-
-		this.set_val = function (v) {
-			this.val = v;
-			redraw();
-		}
-
-		var fill_color = function () {
-			return (that.val > 4) ? FILL_COLOR_5_THRU_9 : FILL_COLOR_0_THRU_4;
-		};
-		var text_color = function () {
-			return (that.val > 4) ? FILL_COLOR_0_THRU_4 : FILL_COLOR_5_THRU_9;
-		}
-		var row = function () {
-			return (that.val < 5) ? (4 - that.val) : (9 - that.val);
-		}
-
-		this.move_to_row = function (r) {
-			var diff = r - row();
-			if (0 == diff) {
-				this.val += (this.val >= 5) ? -5 : 5;
-			} else {
-				this.val -= diff;
-			}
-			redraw();
-		}
-		var labels_visibility = function () {
-			return show_labels ? "visible" : "hidden";
-		}
-
-		var redraw = function () {
-			var r = row();
-			rect.attr("y", ROWS[r]);
-			rect.attr("fill", fill_color());
-			text.attr("y", ROWS[r] + TEXT_OFFSET_Y);
-			text.attr("fill", text_color());
-			text.text(that.val);
-			text.style("visibility", labels_visibility());
-		}
-
-		var rect = svg.append("rect")
-			.attr("x", x)
-			.attr("y", ROWS[row()])
-			.attr("width", ROW_HEIGHT)
-			.attr("height", ROW_HEIGHT)
-			.attr("fill", fill_color())
-			.attr("stroke", SQUARE_BORDER_COLOR)
-			.attr("stroke-width", SQUARE_BORDER_WIDTH);
-
-		var text = svg.append("text")
-			.attr("text-anchor", "middle")
-			.attr("x", x + TEXT_OFFSET_X)
-			.attr("y", ROWS[row()] + TEXT_OFFSET_Y)
-			.attr("font-family", "sans-serif")
-			.attr("font-size", "50px")
-			.attr("fill", text_color())
-			.text(this.val)
-			.style("visibility", labels_visibility());
-	}
-
-	this.set_number = function(num) {
-		for (var i = 0; i < digits.length; i++) {
-			var place = Math.pow(10, i);
-			var d = Math.floor(num / place) % 10;
-
-			digits[i].set_val(d);
-		}
-	};
-
-	this.get_number = function() {
-		var n = 0;
-
-		for (var i = 0; i < digits.length; i++) {
-			n += digits[i].val * Math.pow(10, i);
-		}
-		return n;
-	}
-
-	this.redraw = function() {
-		this.set_number(this.get_number());
-	}
-
-	this.toggle_labels = function() {
+	this.toggle_labels = function () {
 		show_labels = !show_labels;
-		this.redraw();
+		var v = show_labels ? "visible" : "hidden";
+
+		for (var i = 0; i < labels.length; i++) {
+			labels[i].setAttribute("visibility", v);
+		}
 	}
 
-	var closest_row_to_cursor_y_position = function (y) {
-		var centering = (ROW_HEIGHT / 2); // since clicks are aiming for the center of each row
+	function closest_row(y) {
+		var centering = (ROW_HEIGHT / 2);
 		var offset = y - ROW_BASE - centering;
 		var rounded = Math.round(offset / ROW_HEIGHT);
 
 		return Math.max(0, Math.min(4, rounded));
 	}
 
-	var closest_column_to_cursor_x_position = function (x) {
-		var offset = x - COLUMN_BASE;
+	function closest_column(x) {
+		var centering = (ROW_HEIGHT / 2);
+		var offset = x - COLUMN_BASE - centering;
 		var rounded = Math.round(offset / COLUMN_SIZE);
-		var c = Math.max(0, Math.min(COLUMNS.length - 1, rounded));
 
-		return NUM_COLUMNS - c - 1;
+		return Math.max(0, Math.min(COLUMNS.length - 1, rounded));
 	}
 
-	var svg = window.d3.select("body")
-		.append("svg")
-		.attr("width", TOTAL_WIDTH)
-		.attr("height", TOTAL_HEIGHT);
-
-	// Top Line
-	svg.append("line")
-		.attr("x1", 0)
-		.attr("x2", TOTAL_WIDTH)
-		.attr("y1", TOP_LINE_HEIGHT)
-		.attr("y2", TOP_LINE_HEIGHT)
-		.attr("stroke-width", LINE_STROKE_WIDTH)
-		.attr("stroke", "black");
-
-	// Bottom Line
-	svg.append("line")
-		.attr("x1", 0)
-		.attr("x2", TOTAL_WIDTH)
-		.attr("y1", BOTTOM_LINE_HEIGHT)
-		.attr("y2", BOTTOM_LINE_HEIGHT)
-		.attr("stroke-width", LINE_STROKE_WIDTH)
-		.attr("stroke", "black");
-
-	var digits = [];
-	for (var i = 0; i < NUM_COLUMNS; i++) {
-		var x = COLUMNS[NUM_COLUMNS - i - 1] - (ROW_HEIGHT / 2);
-
-		digits[i] = new Digit(0, x);
+	function digit_row(val) {
+		return 4 - (val % 5);
 	}
-	this.set_number(n);
 
-	svg.on('click', function() {
-		d3.event.stopPropagation();
+	function fill(val) {
+		return (val > 4) ? "black" : "white";
+	}
+	function text_fill(val) {
+		return (val > 4) ? "white" : "black";
+	}
 
-		var coords = d3.mouse(this);
-		var x = coords[0];
-		var y = coords[1];
-		var column = closest_column_to_cursor_x_position(x);
-		var r = closest_row_to_cursor_y_position(y);
-		var digit = digits[column];
-		digit.move_to_row(r);
+	this.get_number = function () {
+		var dlen = digits.length;
+		var n = 0;
+		for (var i = 0; i < dlen; i++) {
+			var idx = dlen - i - 1;
+			n += digits[idx] * Math.pow(10, i);
+		}
+		return n;
+	}
+
+	this.set_number = function (num) {
+		var dlen = digits.length;
+		for (var i = 0; i < dlen; i++) {
+			var idx = dlen - i - 1;
+			var place = Math.pow(10, i);
+			var d = Math.floor(num / place) % 10;
+
+			digits[idx] = d;
+			var row = digit_row(d);
+			var y = ROWS[row];
+			var r = rects[idx];
+			r.setAttribute("fill", fill(d));
+			r.setAttribute("y", y);
+			var l = labels[idx];
+			l.setAttribute("fill", text_fill(d));
+			l.setAttribute("y", y + TEXT_OFFSET_Y);
+			l.innerHTML = d;
+		}
+	}
+
+	function abacus_click(evt) {
+		var row = closest_row(evt.offsetY);
+		var col = closest_column(evt.offsetX)
+		var prev_val = digits[col];
+
+		var diff = row - digit_row(prev_val);
+		if (0 == diff) {
+			var new_val = (prev_val + 5) % 10;
+			digits[col] = new_val;
+			rects[col].setAttribute("fill", fill(new_val));
+			var l = labels[col];
+			l.innerHTML = new_val;
+			l.setAttribute("fill", text_fill(new_val));
+		} else {
+			var new_val = prev_val - diff;
+			digits[col] = new_val;
+			rects[col].setAttribute("y", ROWS[row]);
+			var l = labels[col];
+			l.innerHTML = new_val;
+			l.setAttribute("y", ROWS[row] + TEXT_OFFSET_Y);
+		}
 
 		on_update_callback(that);
-	});
+	}
+
+	var svg = document.getElementById("abacus-svg");
+	svg.addEventListener("click", abacus_click);
+
+	var xmlns = "http://www.w3.org/2000/svg";
+
+	var topline = document.createElementNS(xmlns, "line");
+	topline.setAttributeNS(null, "x1", 0);
+	topline.setAttributeNS(null, "x2", SVG_WIDTH);
+	topline.setAttributeNS(null, "y1", ROWS[1]);
+	topline.setAttributeNS(null, "y2", ROWS[1]);
+	topline.setAttributeNS(null, "stroke", "black");
+	topline.setAttributeNS(null, "stroke-width", 5);
+	svg.appendChild(topline);
+
+	var bottomline = document.createElementNS(xmlns, "line");
+	bottomline.setAttributeNS(null, "x1", 0);
+	bottomline.setAttributeNS(null, "x2", SVG_WIDTH);
+	bottomline.setAttributeNS(null, "y1", ROWS[4]);
+	bottomline.setAttributeNS(null, "y2", ROWS[4]);
+	bottomline.setAttributeNS(null, "stroke", "black");
+	bottomline.setAttributeNS(null, "stroke-width", 5);
+	svg.appendChild(bottomline);
+
+	for (var i = 0; i < NUM_COLUMNS; i++) {
+		var x = COLUMNS[i];
+
+		var rect = document.createElementNS(xmlns, "rect");
+		rect.setAttributeNS(null, "y", ROWS[4]);
+		rect.setAttributeNS(null, "x", x);
+		rect.setAttributeNS(null, "width", ROW_HEIGHT);
+		rect.setAttributeNS(null, "height", ROW_HEIGHT);
+		rect.setAttributeNS(null, "stroke", "black");
+		rect.setAttributeNS(null, "stroke-width", 5);
+		rect.setAttributeNS(null, "fill", "white");
+		svg.appendChild(rect);
+
+		var label = document.createElementNS(xmlns, "text");
+		label.setAttributeNS(null, "visibility", show_labels ? "visible" : "hidden");
+		label.setAttributeNS(null, "y", ROWS[4] + TEXT_OFFSET_Y);
+		label.setAttributeNS(null, "x", x + TEXT_OFFSET_X);
+		label.setAttributeNS(null, "text-anchor", "middle");
+		label.setAttributeNS(null, "font-family", "sans-serif");
+		label.setAttributeNS(null, "font-size", TEXT_SIZE);
+		label.innerHTML = 0;
+
+		svg.appendChild(rect);
+		svg.appendChild(label);
+		rects[i] = rect;
+		labels[i] = label;
+	}
+
+	this.set_number(start);
 }
 
 function random_number(limit) {
