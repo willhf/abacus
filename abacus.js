@@ -2,6 +2,7 @@ function Abacus(start, on_update_callback) {
 	var that = this;
 
 	var SVG_WIDTH = 1000;
+	var SVG_HEIGHT = 600;
 
 	var ROW_HEIGHT = 100;
 	var ROW_BASE = 50;
@@ -128,6 +129,8 @@ function Abacus(start, on_update_callback) {
 	}
 
 	var svg = document.getElementById("abacus-svg");
+	svg.setAttribute("width", SVG_WIDTH);
+	svg.setAttribute("height", SVG_HEIGHT);
 	svg.addEventListener("click", abacus_click);
 
 	var xmlns = "http://www.w3.org/2000/svg";
