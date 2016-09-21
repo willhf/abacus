@@ -133,43 +133,43 @@ function Abacus(start, on_update_callback) {
 	var xmlns = "http://www.w3.org/2000/svg";
 
 	var topline = document.createElementNS(xmlns, "line");
-	topline.setAttributeNS(null, "x1", 0);
-	topline.setAttributeNS(null, "x2", SVG_WIDTH);
-	topline.setAttributeNS(null, "y1", ROWS[1]);
-	topline.setAttributeNS(null, "y2", ROWS[1]);
-	topline.setAttributeNS(null, "stroke", "black");
-	topline.setAttributeNS(null, "stroke-width", 5);
+	topline.setAttribute("x1", 0);
+	topline.setAttribute("x2", SVG_WIDTH);
+	topline.setAttribute("y1", ROWS[1]);
+	topline.setAttribute("y2", ROWS[1]);
+	topline.setAttribute("stroke", "black");
+	topline.setAttribute("stroke-width", 5);
 	svg.appendChild(topline);
 
 	var bottomline = document.createElementNS(xmlns, "line");
-	bottomline.setAttributeNS(null, "x1", 0);
-	bottomline.setAttributeNS(null, "x2", SVG_WIDTH);
-	bottomline.setAttributeNS(null, "y1", ROWS[4]);
-	bottomline.setAttributeNS(null, "y2", ROWS[4]);
-	bottomline.setAttributeNS(null, "stroke", "black");
-	bottomline.setAttributeNS(null, "stroke-width", 5);
+	bottomline.setAttribute("x1", 0);
+	bottomline.setAttribute("x2", SVG_WIDTH);
+	bottomline.setAttribute("y1", ROWS[4]);
+	bottomline.setAttribute("y2", ROWS[4]);
+	bottomline.setAttribute("stroke", "black");
+	bottomline.setAttribute("stroke-width", 5);
 	svg.appendChild(bottomline);
 
 	for (var i = 0; i < NUM_COLUMNS; i++) {
 		var x = COLUMNS[i];
 
 		var rect = document.createElementNS(xmlns, "rect");
-		rect.setAttributeNS(null, "y", ROWS[4]);
-		rect.setAttributeNS(null, "x", x);
-		rect.setAttributeNS(null, "width", ROW_HEIGHT);
-		rect.setAttributeNS(null, "height", ROW_HEIGHT);
-		rect.setAttributeNS(null, "stroke", "black");
-		rect.setAttributeNS(null, "stroke-width", 5);
-		rect.setAttributeNS(null, "fill", "white");
+		rect.setAttribute("y", ROWS[4]);
+		rect.setAttribute("x", x);
+		rect.setAttribute("width", ROW_HEIGHT);
+		rect.setAttribute("height", ROW_HEIGHT);
+		rect.setAttribute("stroke", "black");
+		rect.setAttribute("stroke-width", 5);
+		rect.setAttribute("fill", "white");
 		svg.appendChild(rect);
 
 		var label = document.createElementNS(xmlns, "text");
-		label.setAttributeNS(null, "visibility", show_labels ? "visible" : "hidden");
-		label.setAttributeNS(null, "y", ROWS[4] + TEXT_OFFSET_Y);
-		label.setAttributeNS(null, "x", x + TEXT_OFFSET_X);
-		label.setAttributeNS(null, "text-anchor", "middle");
-		label.setAttributeNS(null, "font-family", "sans-serif");
-		label.setAttributeNS(null, "font-size", TEXT_SIZE);
+		label.setAttribute("visibility", show_labels ? "visible" : "hidden");
+		label.setAttribute("y", ROWS[4] + TEXT_OFFSET_Y);
+		label.setAttribute("x", x + TEXT_OFFSET_X);
+		label.setAttribute("text-anchor", "middle");
+		label.setAttribute("font-family", "sans-serif");
+		label.setAttribute("font-size", TEXT_SIZE);
 		label.innerHTML = 0;
 
 		svg.appendChild(rect);
