@@ -39,11 +39,7 @@ function Abacus(start, on_update_callback) {
 
 	this.toggle_labels = function () {
 		show_labels = !show_labels;
-		var v = show_labels ? "visible" : "hidden";
-
-		for (var i = 0; i < labels.length; i++) {
-			labels[i].setAttribute("visibility", v);
-		}
+		labelsgroup.setAttribute("visibility", show_labels ? "visible" : "hidden");
 	}
 
 	function closest_row(y) {
@@ -153,6 +149,9 @@ function Abacus(start, on_update_callback) {
 	bottomline.setAttribute("stroke-width", 5);
 	svg.appendChild(bottomline);
 
+	var labelsgroup = document.createElementNS(xmlns, "g");
+	labelsgroup.setAttribute("visibility", show_labels ? "visible" : "hidden");
+
 	for (var i = 0; i < NUM_COLUMNS; i++) {
 		var x = COLUMNS[i];
 
@@ -167,7 +166,6 @@ function Abacus(start, on_update_callback) {
 		svg.appendChild(rect);
 
 		var label = document.createElementNS(xmlns, "text");
-		label.setAttribute("visibility", show_labels ? "visible" : "hidden");
 		label.setAttribute("y", ROWS[4] + TEXT_OFFSET_Y);
 		label.setAttribute("x", x + TEXT_OFFSET_X);
 		label.setAttribute("text-anchor", "middle");
@@ -176,10 +174,14 @@ function Abacus(start, on_update_callback) {
 		label.innerHTML = 0;
 
 		svg.appendChild(rect);
-		svg.appendChild(label);
+		labelsgroup.appendChild(label);
 		rects[i] = rect;
 		labels[i] = label;
 	}
+
+	// Add labelsgroup to svg after rectangles to ensure the labels appear in
+	// front.
+	svg.appendChild(labelsgroup);
 
 	this.set_number(start);
 }
