@@ -14,6 +14,10 @@ function Abacus(start, on_update_callback) {
 	var TEXT_OFFSET_X = (ROW_HEIGHT / 2);
 	var TEXT_OFFSET_Y = (ROW_HEIGHT / 2) + 15; // 15 seems to make it look alright
 
+	var MAIN_LINE_STROKE_WIDTH = 5;
+	var INTERIOR_LINE_STROKE_WIDTH = 3;
+	var RECT_STROKE_WIDTH = 5;
+
 	// rects are centered on each column
 	var NUM_COLUMNS = 5;
 	var COLUMNS = [
@@ -142,7 +146,7 @@ function Abacus(start, on_update_callback) {
 	topline.setAttribute("y1", ROWS[1]);
 	topline.setAttribute("y2", ROWS[1]);
 	topline.setAttribute("stroke", "black");
-	topline.setAttribute("stroke-width", 5);
+	topline.setAttribute("stroke-width", MAIN_LINE_STROKE_WIDTH);
 	svg.appendChild(topline);
 
 	var bottomline = document.createElementNS(xmlns, "line");
@@ -151,7 +155,7 @@ function Abacus(start, on_update_callback) {
 	bottomline.setAttribute("y1", ROWS[4]);
 	bottomline.setAttribute("y2", ROWS[4]);
 	bottomline.setAttribute("stroke", "black");
-	bottomline.setAttribute("stroke-width", 5);
+	bottomline.setAttribute("stroke-width", MAIN_LINE_STROKE_WIDTH);
 	svg.appendChild(bottomline);
 
 	var labelsgroup = document.createElementNS(xmlns, "g");
@@ -169,7 +173,7 @@ function Abacus(start, on_update_callback) {
 		rect.setAttribute("width", ROW_HEIGHT);
 		rect.setAttribute("height", ROW_HEIGHT);
 		rect.setAttribute("stroke", "black");
-		rect.setAttribute("stroke-width", 5);
+		rect.setAttribute("stroke-width", RECT_STROKE_WIDTH);
 		rect.setAttribute("fill", "white");
 		svg.appendChild(rect);
 
@@ -187,7 +191,7 @@ function Abacus(start, on_update_callback) {
 		top_interior_line.setAttribute("y1", ROWS[2]);
 		top_interior_line.setAttribute("y2", ROWS[2]);
 		top_interior_line.setAttribute("stroke", "black");
-		top_interior_line.setAttribute("stroke-width", 5);
+		top_interior_line.setAttribute("stroke-width", INTERIOR_LINE_STROKE_WIDTH);
 
 		var bottom_interior_line = document.createElementNS(xmlns, "line");
 		bottom_interior_line.setAttribute("x1", x + (ROW_HEIGHT / 4));
@@ -195,7 +199,7 @@ function Abacus(start, on_update_callback) {
 		bottom_interior_line.setAttribute("y1", ROWS[3]);
 		bottom_interior_line.setAttribute("y2", ROWS[3]);
 		bottom_interior_line.setAttribute("stroke", "black");
-		bottom_interior_line.setAttribute("stroke-width", 5);
+		bottom_interior_line.setAttribute("stroke-width", INTERIOR_LINE_STROKE_WIDTH);
 
 		interior_lines_group.appendChild(top_interior_line);
 		interior_lines_group.appendChild(bottom_interior_line);
