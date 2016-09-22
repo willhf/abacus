@@ -36,10 +36,15 @@ function Abacus(start, on_update_callback) {
 	var rects = [];
 	var labels = [];
 	var show_labels = false;
+	var show_interior_lines = true;
 
 	this.toggle_labels = function () {
 		show_labels = !show_labels;
 		labelsgroup.setAttribute("visibility", show_labels ? "visible" : "hidden");
+	}
+	this.toggle_interior_lines = function () {
+		show_interior_lines = !show_interior_lines;
+		interior_lines_group.setAttribute("visibility", show_interior_lines ? "visible" : "hidden");
 	}
 
 	function closest_row(y) {
@@ -152,6 +157,9 @@ function Abacus(start, on_update_callback) {
 	var labelsgroup = document.createElementNS(xmlns, "g");
 	labelsgroup.setAttribute("visibility", show_labels ? "visible" : "hidden");
 
+	var interior_lines_group = document.createElementNS(xmlns, "g");
+	interior_lines_group.setAttribute("visibility", show_interior_lines ? "visible" : "hidden");
+
 	for (var i = 0; i < NUM_COLUMNS; i++) {
 		var x = COLUMNS[i];
 
@@ -173,6 +181,24 @@ function Abacus(start, on_update_callback) {
 		label.setAttribute("font-size", TEXT_SIZE);
 		label.innerHTML = 0;
 
+		var top_interior_line = document.createElementNS(xmlns, "line");
+		top_interior_line.setAttribute("x1", x + (ROW_HEIGHT / 4));
+		top_interior_line.setAttribute("x2", x + 3 * (ROW_HEIGHT / 4));
+		top_interior_line.setAttribute("y1", ROWS[2]);
+		top_interior_line.setAttribute("y2", ROWS[2]);
+		top_interior_line.setAttribute("stroke", "black");
+		top_interior_line.setAttribute("stroke-width", 5);
+
+		var bottom_interior_line = document.createElementNS(xmlns, "line");
+		bottom_interior_line.setAttribute("x1", x + (ROW_HEIGHT / 4));
+		bottom_interior_line.setAttribute("x2", x + 3 * (ROW_HEIGHT / 4));
+		bottom_interior_line.setAttribute("y1", ROWS[3]);
+		bottom_interior_line.setAttribute("y2", ROWS[3]);
+		bottom_interior_line.setAttribute("stroke", "black");
+		bottom_interior_line.setAttribute("stroke-width", 5);
+
+		interior_lines_group.appendChild(top_interior_line);
+		interior_lines_group.appendChild(bottom_interior_line);
 		svg.appendChild(rect);
 		labelsgroup.appendChild(label);
 		rects[i] = rect;
@@ -182,6 +208,7 @@ function Abacus(start, on_update_callback) {
 	// Add labelsgroup to svg after rectangles to ensure the labels appear in
 	// front.
 	svg.appendChild(labelsgroup);
+	svg.appendChild(interior_lines_group);
 
 	this.set_number(start);
 }
