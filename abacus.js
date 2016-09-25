@@ -17,9 +17,9 @@ function Abacus(start, on_update_callback) {
 	var TEXT_OFFSET_X = (RECT_DIM / 2);
 	var TEXT_OFFSET_Y = (RECT_DIM / 2) + 15; // 15 seems to make it look alright
 
-	var MAIN_LINE_STROKE_WIDTH = 5;
+	var MAIN_LINE_STROKE_WIDTH = 6;
 	var INTERIOR_LINE_STROKE_WIDTH = 3;
-	var RECT_STROKE_WIDTH = 5;
+	var RECT_STROKE_WIDTH = 6;
 
 	var COLUMNS = [];
 	for (var i = 0; i < NUM_COLUMNS; i++) {
