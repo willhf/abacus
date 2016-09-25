@@ -1,42 +1,44 @@
 function Abacus(start, on_update_callback) {
 	var that = this;
 
-	var SVG_WIDTH = 1000;
+	// THE CONTROLS
+	var NUM_COLUMNS = 6;
+	var RECT_DIM = 100;
+	var HORIZONTAL_SPACE_BETWEEN_RECTS = 3 * (RECT_DIM / 4);
+
+	var ROW_BASE = 10;
+	var COLUMN_BASE = HORIZONTAL_SPACE_BETWEEN_RECTS / 2;
+	var COLUMN_SIZE = RECT_DIM + HORIZONTAL_SPACE_BETWEEN_RECTS;
+
+	var SVG_WIDTH = COLUMN_SIZE * NUM_COLUMNS;
 	var SVG_HEIGHT = 600;
 
-	var ROW_HEIGHT = 100;
-	var ROW_BASE = 50;
-
-	var COLUMN_SIZE = 175;
-	var COLUMN_BASE = 100;
-
 	var TEXT_SIZE = 50;
-	var TEXT_OFFSET_X = (ROW_HEIGHT / 2);
-	var TEXT_OFFSET_Y = (ROW_HEIGHT / 2) + 15; // 15 seems to make it look alright
+	var TEXT_OFFSET_X = (RECT_DIM / 2);
+	var TEXT_OFFSET_Y = (RECT_DIM / 2) + 15; // 15 seems to make it look alright
 
 	var MAIN_LINE_STROKE_WIDTH = 5;
 	var INTERIOR_LINE_STROKE_WIDTH = 3;
 	var RECT_STROKE_WIDTH = 5;
 
-	// rects are centered on each column
-	var NUM_COLUMNS = 5;
-	var COLUMNS = [
-		COLUMN_BASE + (COLUMN_SIZE * 0),
-		COLUMN_BASE + (COLUMN_SIZE * 1),
-		COLUMN_BASE + (COLUMN_SIZE * 2),
-		COLUMN_BASE + (COLUMN_SIZE * 3),
-		COLUMN_BASE + (COLUMN_SIZE * 4),
-	];
+	var COLUMNS = [];
+	for (var i = 0; i < NUM_COLUMNS; i++) {
+		COLUMNS[i] = COLUMN_BASE + (COLUMN_SIZE * i);
+	}
 
 	var ROWS = [
-		ROW_BASE + (ROW_HEIGHT * 0),
-		ROW_BASE + (ROW_HEIGHT * 1),
-		ROW_BASE + (ROW_HEIGHT * 2),
-		ROW_BASE + (ROW_HEIGHT * 3),
-		ROW_BASE + (ROW_HEIGHT * 4),
+		ROW_BASE + (RECT_DIM * 0),
+		ROW_BASE + (RECT_DIM * 1),
+		ROW_BASE + (RECT_DIM * 2),
+		ROW_BASE + (RECT_DIM * 3),
+		ROW_BASE + (RECT_DIM * 4),
 	];
 
-	var digits = [0, 0, 0, 0, 0];
+	var digits = [];
+	for (var i = 0; i < NUM_COLUMNS; i++) {
+		digits[i] = 0;
+	}
+
 	var rects = [];
 	var labels = [];
 	var show_labels = false;
@@ -52,15 +54,15 @@ function Abacus(start, on_update_callback) {
 	}
 
 	function closest_row(y) {
-		var centering = (ROW_HEIGHT / 2);
+		var centering = (RECT_DIM / 2);
 		var offset = y - ROW_BASE - centering;
-		var rounded = Math.round(offset / ROW_HEIGHT);
+		var rounded = Math.round(offset / RECT_DIM);
 
 		return Math.max(0, Math.min(4, rounded));
 	}
 
 	function closest_column(x) {
-		var centering = (ROW_HEIGHT / 2);
+		var centering = (RECT_DIM / 2);
 		var offset = x - COLUMN_BASE - centering;
 		var rounded = Math.round(offset / COLUMN_SIZE);
 
@@ -170,8 +172,8 @@ function Abacus(start, on_update_callback) {
 		var rect = document.createElementNS(xmlns, "rect");
 		rect.setAttribute("y", ROWS[4]);
 		rect.setAttribute("x", x);
-		rect.setAttribute("width", ROW_HEIGHT);
-		rect.setAttribute("height", ROW_HEIGHT);
+		rect.setAttribute("width", RECT_DIM);
+		rect.setAttribute("height", RECT_DIM);
 		rect.setAttribute("stroke", "black");
 		rect.setAttribute("stroke-width", RECT_STROKE_WIDTH);
 		rect.setAttribute("fill", "white");
@@ -185,17 +187,23 @@ function Abacus(start, on_update_callback) {
 		label.setAttribute("font-size", TEXT_SIZE);
 		label.innerHTML = 0;
 
+		var INTERIOR_LINE_LENGTH = RECT_DIM / 3;
+
+		var center = RECT_DIM / 2;
+		var interior_x1_offset = center - (INTERIOR_LINE_LENGTH / 2);
+		var interior_x2_offset = center + (INTERIOR_LINE_LENGTH / 2);
+
 		var top_interior_line = document.createElementNS(xmlns, "line");
-		top_interior_line.setAttribute("x1", x + (ROW_HEIGHT / 4));
-		top_interior_line.setAttribute("x2", x + 3 * (ROW_HEIGHT / 4));
+		top_interior_line.setAttribute("x1", x + interior_x1_offset);
+		top_interior_line.setAttribute("x2", x + interior_x2_offset);
 		top_interior_line.setAttribute("y1", ROWS[2]);
 		top_interior_line.setAttribute("y2", ROWS[2]);
 		top_interior_line.setAttribute("stroke", "black");
 		top_interior_line.setAttribute("stroke-width", INTERIOR_LINE_STROKE_WIDTH);
 
 		var bottom_interior_line = document.createElementNS(xmlns, "line");
-		bottom_interior_line.setAttribute("x1", x + (ROW_HEIGHT / 4));
-		bottom_interior_line.setAttribute("x2", x + 3 * (ROW_HEIGHT / 4));
+		bottom_interior_line.setAttribute("x1", x + interior_x1_offset);
+		bottom_interior_line.setAttribute("x2", x + interior_x2_offset);
 		bottom_interior_line.setAttribute("y1", ROWS[3]);
 		bottom_interior_line.setAttribute("y2", ROWS[3]);
 		bottom_interior_line.setAttribute("stroke", "black");
@@ -207,6 +215,19 @@ function Abacus(start, on_update_callback) {
 		labelsgroup.appendChild(label);
 		rects[i] = rect;
 		labels[i] = label;
+	}
+
+	var DIVIDER_COLOR = "red";
+	var DIVIDER_RADIUS = 10;
+	var DIVIDER_XS = [3 * COLUMN_SIZE];
+	for (var i = 0; i < DIVIDER_XS.length; i++) {
+		var x = DIVIDER_XS[i];
+		var l = document.createElementNS(xmlns, "circle");
+		l.setAttribute("cx", x);
+		l.setAttribute("cy", ROW_BASE + (2.5 * RECT_DIM));
+		l.setAttribute("r", DIVIDER_RADIUS);
+		l.setAttribute("fill", DIVIDER_COLOR);
+		svg.appendChild(l);
 	}
 
 	// Add labelsgroup to svg after rectangles to ensure the labels appear in
