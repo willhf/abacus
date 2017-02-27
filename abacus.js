@@ -3,7 +3,7 @@ function Abacus(start, on_update_callback) {
 
 	// THE CONTROLS
 	var NUM_COLUMNS = 6;
-	var RECT_DIM = 70;
+	var RECT_DIM = 55;
 	var HORIZONTAL_SPACE_BETWEEN_RECTS = 3 * (RECT_DIM / 4);
 
 	var ROW_BASE = 10;
@@ -17,9 +17,9 @@ function Abacus(start, on_update_callback) {
 	var TEXT_OFFSET_X = (RECT_DIM / 2);
 	var TEXT_OFFSET_Y = (RECT_DIM / 2) + 15; // 15 seems to make it look alright
 
-	var MAIN_LINE_STROKE_WIDTH = 6;
-	var INTERIOR_LINE_STROKE_WIDTH = 3;
-	var RECT_STROKE_WIDTH = 6;
+	var MAIN_LINE_STROKE_WIDTH = 4;
+	var INTERIOR_LINE_STROKE_WIDTH = 2;
+	var RECT_STROKE_WIDTH = 4;
 
 	var COLUMNS = [];
 	for (var i = 0; i < NUM_COLUMNS; i++) {
