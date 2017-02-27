@@ -24,9 +24,9 @@
 		}
 
 		var prev_next_add = next_add;
-		next_add = random_nonzero_digit();
+		next_add = random_number(1000);
 		while (next_add == prev_next_add) {
-			next_add = random_nonzero_digit();
+			next_add = random_number(1000);
 		}
 		start = answer;
 		answer = val + next_add;

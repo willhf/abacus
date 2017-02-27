@@ -133,12 +133,20 @@ function Abacus(start, on_update_callback) {
 		}
 
 		on_update_callback(that);
+		evt.stopPropagation();
+	}
+
+
+	function stop_propagation(evt) {
+		evt.stopPropagation();
 	}
 
 	var svg = document.getElementById("abacus-svg");
 	svg.setAttribute("width", SVG_WIDTH);
 	svg.setAttribute("height", SVG_HEIGHT);
 	svg.addEventListener("click", abacus_click);
+	svg.addEventListener("mousedown", stop_propagation);
+	svg.addEventListener("mouseup", stop_propagation);
 
 	var xmlns = "http://www.w3.org/2000/svg";
 
