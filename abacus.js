@@ -3,7 +3,7 @@ function Abacus(start, on_update_callback) {
 
 	// THE CONTROLS
 	var NUM_COLUMNS = 6;
-	var RECT_DIM = 100;
+	var RECT_DIM = 70;
 	var HORIZONTAL_SPACE_BETWEEN_RECTS = 3 * (RECT_DIM / 4);
 
 	var ROW_BASE = 10;
@@ -11,7 +11,7 @@ function Abacus(start, on_update_callback) {
 	var COLUMN_SIZE = RECT_DIM + HORIZONTAL_SPACE_BETWEEN_RECTS;
 
 	var SVG_WIDTH = COLUMN_SIZE * NUM_COLUMNS;
-	var SVG_HEIGHT = 600;
+	var SVG_HEIGHT = (RECT_DIM * 5) + 50;
 
 	var TEXT_SIZE = 50;
 	var TEXT_OFFSET_X = (RECT_DIM / 2);
@@ -134,11 +134,13 @@ function Abacus(start, on_update_callback) {
 
 		on_update_callback(that);
 		evt.stopPropagation();
+		evt.preventDefault();
 	}
 
 
 	function stop_propagation(evt) {
 		evt.stopPropagation();
+		evt.preventDefault();
 	}
 
 	var svg = document.getElementById("abacus-svg");
