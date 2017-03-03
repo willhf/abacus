@@ -1,9 +1,18 @@
 <html>
 	<head>
-	<meta name="viewport" content="width=device-width, user-scalable=no">
+		<meta name="viewport" content="width=device-width, user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="abacus.css">
 	</head>
 	<body>
-	<div id="question" style="font-size: 5em;"></div>
+	<header class='nav-header'>
+		<span class='logo' id="question"></span>
+		<nav class='vertical-align-middle scroll'>
+			<span class='nav-item'><a href="index.html">index</a></span>
+			<span class='nav-item'><a href="javascript:void(0);" onclick="reset_question();">reset question</a></span>
+			<span class='nav-item'><a href="javascript:void(0);" onclick="ab.toggle_labels();">toggle-labels</a></span>
+			<span class='nav-item'><a href="javascript:void(0);" onclick="ab.toggle_interior_lines();">toggle-interior-lines</a></span>
+		</nav>
+	</header>
 	<svg id="abacus-svg" ></svg>
 	<script src="abacus.js" charset="utf-8"></script>
 	<script type="text/javascript">
@@ -25,9 +34,9 @@
 		}
 
 		var prev_next_add = next_add;
-		next_add = random_number(1000);
+		next_add = random_number(9) + 1;
 		while (next_add == prev_next_add) {
-			next_add = random_number(1000);
+			next_add = random_number(9) + 1;
 		}
 		start = answer;
 		answer = val + next_add;
@@ -39,9 +48,6 @@
 	}
 
 	</script>
-	</br> <a href="javascript:void(0);" onclick="reset_question();">reset question</a>
-	</br> <a href="javascript:void(0);" onclick="ab.toggle_labels();">toggle labels</a>
-	</br> <a href="javascript:void(0);" onclick="ab.toggle_interior_lines();">toggle interior lines</a>
 	</body>
 </html>
 

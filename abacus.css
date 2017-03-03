@@ -1,0 +1,56 @@
+/*
+ * Thanks to: iamsteve.me/blog/entry/horizontal-scrolling-responsive-menu
+ */
+
+.scroll {
+  white-space: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.nav-header .logo {
+  width: 25%;
+}
+.nav-header nav {
+  width: 75%;
+}
+
+.nav-header {
+  border-radius: 3px;
+  max-width: 500px;
+}
+
+.logo {
+  text-align: center;
+  font-weight: 700;
+  color: black;
+  border:  1px solid black;
+  padding: 12px 24px 13px;
+}
+
+.nav-item {
+  padding: 12px 16px 13px;
+  border: 1px solid black;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+header,
+nav {
+  font-size: 0;
+}
+
+.logo,
+.nav-item {
+  font-size: 14px;
+}
+
+.logo,
+.nav-item,
+.vertical-align-middle {
+  display: inline-block;
+  vertical-align: middle;
+}

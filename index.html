@@ -1,8 +1,19 @@
 <html>
 	<head>
-	<meta name="viewport" content="width=device-width, user-scalable=no">
+		<meta name="viewport" content="width=device-width, user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="abacus.css">
 	</head>
 	<body>
+	<header class='nav-header'>
+		<span class='logo'>Abacus</span>
+		<nav class='vertical-align-middle scroll'>
+			<span class='nav-item'><a href="adding_game.html">adding game</a></span>
+			<span class='nav-item'><a href="identification_game.html">identification game</a></span>
+			<span class='nav-item'><a href="javascript:void(0);" onclick="ab.set_number(0);">zero</a></span>
+			<span class='nav-item'><a href="javascript:void(0);" onclick="ab.toggle_labels();">toggle-labels</a></span>
+			<span class='nav-item'><a href="javascript:void(0);" onclick="ab.toggle_interior_lines();">toggle-interior-lines</a></span>
+		</nav>
+	</header>
 	<svg id="abacus-svg" ></svg>
 	</br>
 	<script src="abacus.js" charset="utf-8"></script>
@@ -11,11 +22,6 @@
 	var ab = new Abacus(0, function(a){});
 
 	</script>
-	</br><a href="adding_game.html">adding game</a>
-	</br><a href="identification_game.html">identification game</a>
-	</br><a href="javascript:void(0);" onclick="ab.set_number(0);">zero</a>
-	</br><a href="javascript:void(0);" onclick="ab.toggle_labels();">toggle labels</a>
-	</br><a href="javascript:void(0);" onclick="ab.toggle_interior_lines();">toggle interior lines</a>
 	</body>
 </html>
 
