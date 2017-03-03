@@ -246,6 +246,17 @@ function Abacus(start, on_update_callback) {
 	svg.appendChild(labelsgroup);
 	svg.appendChild(interior_lines_group);
 
+	this.flash_correct = function () {
+		var correct_color = "#5FF72D";
+		bottomline.setAttribute("stroke", correct_color);
+		topline.setAttribute("stroke", correct_color);
+
+		setTimeout(function() {
+			bottomline.setAttribute("stroke", "black");
+			topline.setAttribute("stroke", "black");
+		}, 250);
+	}
+
 	this.set_number(start);
 }
 
